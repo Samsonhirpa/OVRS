@@ -1,0 +1,475 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title><?php echo $pageTitle; ?></title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    
+    <style>
+        body {
+            background-color: #f4f6f9;
+            font-family: 'Poppins', sans-serif;
+            padding: 20px;
+        }
+        
+        .form-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.1);
+            padding: 25px;
+        }
+        
+        .form-header {
+            background: linear-gradient(135deg, #2c5f2d 0%, #1e4b1f 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 25px;
+        }
+        
+        .form-header h2 {
+            margin: 0;
+            font-size: 24px;
+            font-weight: 600;
+        }
+        
+        .form-header p {
+            margin: 5px 0 0;
+            opacity: 0.9;
+        }
+        
+        .info-section {
+            background: #e8f0e8;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 5px solid #2c5f2d;
+        }
+        
+        .info-label {
+            font-weight: 600;
+            color: #2c5f2d;
+            font-size: 14px;
+        }
+        
+        .info-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .session-badge {
+            display: inline-block;
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+        
+        .session-morning {
+            background: #ffc857;
+            color: #333;
+        }
+        
+        .session-afternoon {
+            background: #2c5f2d;
+            color: white;
+        }
+        
+        .report-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+        }
+        
+        .report-table th {
+            background: #2c5f2d;
+            color: white;
+            padding: 10px 5px;
+            text-align: center;
+            vertical-align: middle;
+            font-weight: 600;
+        }
+        
+        .report-table th.sub-header {
+            background: #3e7c40;
+        }
+        
+        .report-table th.sub-header2 {
+            background: #e8f0e8;
+            color: #2c5f2d;
+        }
+        
+        .report-table td {
+            padding: 5px;
+            text-align: center;
+            vertical-align: middle;
+            border: 1px solid #dee2e6;
+        }
+        
+        .report-table input {
+            width: 70px;
+            padding: 6px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 13px;
+        }
+        
+        .report-table input[readonly] {
+            background: #f0f0f0;
+            border: 1px solid #ddd;
+            font-weight: 600;
+        }
+        
+        .region-name {
+            font-weight: 600;
+            background: #f5f5f5;
+        }
+        
+        .btn-submit {
+            background: #2c5f2d;
+            color: white;
+            font-weight: 600;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            transition: all 0.3s;
+        }
+        
+        .btn-submit:hover {
+            background: #1e4b1f;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(44,95,45,0.3);
+        }
+        
+        .btn-reset {
+            background: #6c757d;
+            color: white;
+            font-weight: 600;
+            padding: 12px 40px;
+            border: none;
+            border-radius: 50px;
+            font-size: 16px;
+            margin-left: 15px;
+        }
+        
+        .alert {
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .serial-badge {
+            background: #2c5f2d;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 600;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <!-- Form Header -->
+        <div class="form-header">
+            <h2><i class="fas fa-check-square me-2"></i>Guyyaa Guyyaa Galmee Ragaa Filannoo</h2>
+            <p>Naannoo Filannoo irraa gabaasni guyyaa lama galmaa'a</p>
+        </div>
+        
+        <!-- Flash Messages -->
+        <?php if($this->session->flashdata('success')): ?>
+            <div class="alert alert-success"><?php echo $this->session->flashdata('success'); ?></div>
+        <?php endif; ?>
+        
+        <?php if($this->session->flashdata('error')): ?>
+            <div class="alert alert-danger"><?php echo $this->session->flashdata('error'); ?></div>
+        <?php endif; ?>
+        
+        <!-- Information Section -->
+        <div class="info-section">
+            <div class="row">
+                <div class="col-md-3">
+                    <div class="info-label">Guyyaa</div>
+                    <div class="info-value"><?php echo date('Y-m-d', strtotime($today)); ?></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-label">Yeroo</div>
+                    <div class="info-value"><?php echo $current_time; ?></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-label">Lakkoofsa Tarree</div>
+                    <div class="info-value"><span class="serial-badge">#<?php echo $serial_number; ?></span></div>
+                </div>
+                <div class="col-md-3">
+                    <div class="info-label">Gabaasaa</div>
+                    <div class="info-value"><?php echo $reporter_name; ?></div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Session Status -->
+        <div class="text-center">
+            <?php if($morning_report): ?>
+                <span class="session-badge session-morning me-3">
+                    <i class="fas fa-check-circle"></i> Kan Ganama Galmaa'eera
+                </span>
+            <?php else: ?>
+                <span class="session-badge session-morning me-3">
+                    <i class="fas fa-clock"></i> Kan Ganama Hin Galmaa'in
+                </span>
+            <?php endif; ?>
+            
+            <?php if($afternoon_report): ?>
+                <span class="session-badge session-afternoon">
+                    <i class="fas fa-check-circle"></i> Kan Waaree Booda Galmaa'eera
+                </span>
+            <?php else: ?>
+                <span class="session-badge session-afternoon">
+                    <i class="fas fa-clock"></i> Kan Waaree Booda Hin Galmaa'in
+                </span>
+            <?php endif; ?>
+        </div>
+        
+        <!-- Registration Form -->
+        <form method="post" action="<?php echo base_url('VotingReport/save'); ?>" id="votingForm">
+            
+            <!-- Hidden Fields -->
+            <input type="hidden" name="voting_region_id" value="<?php echo $voting_region_id; ?>">
+            <input type="hidden" name="voting_region_name" value="<?php echo $voting_region_name; ?>">
+            <input type="hidden" name="report_date" value="<?php echo $today; ?>">
+            <input type="hidden" name="report_time" value="<?php echo $current_time; ?>">
+            <input type="hidden" name="serial_number" value="<?php echo $serial_number; ?>">
+            <input type="hidden" name="reporter_id" value="<?php echo $reporter_id; ?>">
+            <input type="hidden" name="reporter_name" value="<?php echo $reporter_name; ?>">
+            
+            <!-- Session Selection -->
+            <div class="row mb-4">
+                <div class="col-md-6 offset-md-3">
+                    <label class="form-label fw-bold">Yeroo Gabaasaa:</label>
+                    <select name="report_session" class="form-select" required>
+                        <option value="">Yeroo filadhu...</option>
+                        <option value="morning" <?php echo ($current_session == 'morning' && !$morning_report) ? 'selected' : ''; ?> <?php echo $morning_report ? 'disabled' : ''; ?>>Kan Ganama (8:00-12:00)</option>
+                        <option value="afternoon" <?php echo ($current_session == 'afternoon' && !$afternoon_report) ? 'selected' : ''; ?> <?php echo $afternoon_report ? 'disabled' : ''; ?>>Kan Waaree Booda (14:00-17:00)</option>
+                    </select>
+                </div>
+            </div>
+            
+            <!-- Main Table -->
+            <div class="table-responsive">
+                <table class="report-table">
+                    <!-- Header Row 1 -->
+                    <tr>
+                        <th rowspan="3" style="min-width: 50px;">#</th>
+                        <th rowspan="3" style="min-width: 150px;">Naannoo Filannoo</th>
+                        <th colspan="9" style="background: #2c5f2d;">KAROORA (QOPHII)</th>
+                        <th colspan="12" style="background: #2c5f2d;">HOJIIN RAAWWATAME</th>
+                        <th colspan="6" style="background: #2c5f2d;">GALMEE DABALATAA</th>
+                        <th rowspan="3" style="min-width: 150px;">HUBANNOO</th>
+                    </tr>
+                    
+                    <!-- Header Row 2 -->
+                    <tr>
+                        <th colspan="3" class="sub-header">Abbaa Miseensa</th>
+                        <th colspan="3" class="sub-header">Miseensa Hin Taane</th>
+                        <th colspan="3" class="sub-header">Ida'ama Waliigalaa</th>
+                        
+                        <th colspan="4" class="sub-header">Abbaa Miseensa</th>
+                        <th colspan="4" class="sub-header">Miseensa Hin Taane</th>
+                        <th colspan="4" class="sub-header">Ida'ama Waliigalaa</th>
+                        
+                        <th colspan="3" class="sub-header">Abbaa Miseensa</th>
+                        <th colspan="3" class="sub-header">Miseensa Hin Taane</th>
+                    </tr>
+                    
+                    <!-- Header Row 3 -->
+                    <tr>
+                        <!-- Karoora -->
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        
+                        <!-- Hojiin Raawwatame -->
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        <th class="sub-header2">%</th>
+                        
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        <th class="sub-header2">%</th>
+                        
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        <th class="sub-header2">%</th>
+                        
+                        <!-- Galmee Dabalataa -->
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                        
+                        <th class="sub-header2">Dhiira</th>
+                        <th class="sub-header2">Dubartii</th>
+                        <th class="sub-header2">Ida'ama</th>
+                    </tr>
+                    
+                    <!-- Data Row -->
+                    <tr>
+                        <td class="region-name">1</td>
+                        <td class="region-name"><?php echo $voting_region_name; ?></td>
+                        
+                        <!-- Karoora - Abbaa Miseensa -->
+                        <td><input type="number" name="plan_member_male" id="plan_member_male" value="233988" onchange="calculateAll()"></td>
+                        <td><input type="number" name="plan_member_female" id="plan_member_female" value="116654" onchange="calculateAll()"></td>
+                        <td><input type="text" name="plan_member_total" id="plan_member_total" readonly value="350642"></td>
+                        
+                        <!-- Karoora - Miseensa Hin Taane -->
+                        <td><input type="number" name="plan_nonmember_male" id="plan_nonmember_male" value="311968" onchange="calculateAll()"></td>
+                        <td><input type="number" name="plan_nonmember_female" id="plan_nonmember_female" value="403661" onchange="calculateAll()"></td>
+                        <td><input type="text" name="plan_nonmember_total" id="plan_nonmember_total" readonly value="715629"></td>
+                        
+                        <!-- Karoora - Ida'ama Waliigalaa -->
+                        <td><input type="text" name="plan_total_male" id="plan_total_male" readonly value="545956"></td>
+                        <td><input type="text" name="plan_total_female" id="plan_total_female" readonly value="520315"></td>
+                        <td><input type="text" name="plan_grand_total" id="plan_grand_total" readonly value="1066271"></td>
+                        
+                        <!-- Hojiin Raawwatame - Abbaa Miseensa -->
+                        <td><input type="number" name="actual_member_male" id="actual_member_male" value="134875" onchange="calculateAll()"></td>
+                        <td><input type="number" name="actual_member_female" id="actual_member_female" value="76531" onchange="calculateAll()"></td>
+                        <td><input type="text" name="actual_member_total" id="actual_member_total" readonly value="211406"></td>
+                        <td><input type="text" name="actual_member_percent" id="actual_member_percent" readonly class="bg-light" value="60.27"></td>
+                        
+                        <!-- Hojiin Raawwatame - Miseensa Hin Taane -->
+                        <td><input type="number" name="actual_nonmember_male" id="actual_nonmember_male" value="73858" onchange="calculateAll()"></td>
+                        <td><input type="number" name="actual_nonmember_female" id="actual_nonmember_female" value="79509" onchange="calculateAll()"></td>
+                        <td><input type="text" name="actual_nonmember_total" id="actual_nonmember_total" readonly value="153367"></td>
+                        <td><input type="text" name="actual_nonmember_percent" id="actual_nonmember_percent" readonly class="bg-light" value="21.43"></td>
+                        
+                        <!-- Hojiin Raawwatame - Ida'ama Waliigalaa -->
+                        <td><input type="text" name="actual_total_male" id="actual_total_male" readonly value="208733"></td>
+                        <td><input type="text" name="actual_total_female" id="actual_total_female" readonly value="156040"></td>
+                        <td><input type="text" name="actual_grand_total" id="actual_grand_total" readonly value="364773"></td>
+                        <td><input type="text" name="actual_total_percent" id="actual_total_percent" readonly class="bg-light" value="34.22"></td>
+                        
+                        <!-- Galmee Dabalataa - Abbaa Miseensa -->
+                        <td><input type="number" name="additional_member_male" id="additional_member_male" value="119184" onchange="calculateAll()"></td>
+                        <td><input type="number" name="additional_member_female" id="additional_member_female" value="68173" onchange="calculateAll()"></td>
+                        <td><input type="text" name="additional_member_total" id="additional_member_total" readonly value="187357"></td>
+                        
+                        <!-- Galmee Dabalataa - Miseensa Hin Taane -->
+                        <td><input type="number" name="additional_nonmember_male" id="additional_nonmember_male" value="67958" onchange="calculateAll()"></td>
+                        <td><input type="number" name="additional_nonmember_female" id="additional_nonmember_female" value="72242" onchange="calculateAll()"></td>
+                        <td><input type="text" name="additional_nonmember_total" id="additional_nonmember_total" readonly value="140200"></td>
+                        
+                        <!-- Hubannoo -->
+                        <td><input type="text" name="remarks" value="Hojiin itti fufiinsa qaba" style="width: 150px;"></td>
+                    </tr>
+                </table>
+            </div>
+            
+            <!-- Submit Buttons -->
+            <div class="text-center mt-4">
+                <button type="submit" class="btn-submit" <?php echo ($morning_report && $afternoon_report) ? 'disabled' : ''; ?>>
+                    <i class="fas fa-save me-2"></i>Galmee Gabaa
+                </button>
+                <button type="reset" class="btn-reset">
+                    <i class="fas fa-undo me-2"></i>Irra Deebi'i
+                </button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- JavaScript for Calculations -->
+    <script>
+        function calculateAll() {
+            // Get Karoora values
+            let planMemberMale = parseFloat(document.getElementById('plan_member_male').value) || 0;
+            let planMemberFemale = parseFloat(document.getElementById('plan_member_female').value) || 0;
+            let planNonmemberMale = parseFloat(document.getElementById('plan_nonmember_male').value) || 0;
+            let planNonmemberFemale = parseFloat(document.getElementById('plan_nonmember_female').value) || 0;
+            
+            // Calculate Karoora totals
+            let planMemberTotal = planMemberMale + planMemberFemale;
+            let planNonmemberTotal = planNonmemberMale + planNonmemberFemale;
+            let planTotalMale = planMemberMale + planNonmemberMale;
+            let planTotalFemale = planMemberFemale + planNonmemberFemale;
+            let planGrandTotal = planMemberTotal + planNonmemberTotal;
+            
+            document.getElementById('plan_member_total').value = planMemberTotal;
+            document.getElementById('plan_nonmember_total').value = planNonmemberTotal;
+            document.getElementById('plan_total_male').value = planTotalMale;
+            document.getElementById('plan_total_female').value = planTotalFemale;
+            document.getElementById('plan_grand_total').value = planGrandTotal;
+            
+            // Get Actual values
+            let actualMemberMale = parseFloat(document.getElementById('actual_member_male').value) || 0;
+            let actualMemberFemale = parseFloat(document.getElementById('actual_member_female').value) || 0;
+            let actualNonmemberMale = parseFloat(document.getElementById('actual_nonmember_male').value) || 0;
+            let actualNonmemberFemale = parseFloat(document.getElementById('actual_nonmember_female').value) || 0;
+            
+            // Calculate Actual totals
+            let actualMemberTotal = actualMemberMale + actualMemberFemale;
+            let actualNonmemberTotal = actualNonmemberMale + actualNonmemberFemale;
+            let actualTotalMale = actualMemberMale + actualNonmemberMale;
+            let actualTotalFemale = actualMemberFemale + actualNonmemberFemale;
+            let actualGrandTotal = actualMemberTotal + actualNonmemberTotal;
+            
+            document.getElementById('actual_member_total').value = actualMemberTotal;
+            document.getElementById('actual_nonmember_total').value = actualNonmemberTotal;
+            document.getElementById('actual_total_male').value = actualTotalMale;
+            document.getElementById('actual_total_female').value = actualTotalFemale;
+            document.getElementById('actual_grand_total').value = actualGrandTotal;
+            
+            // Calculate percentages
+            if(planMemberTotal > 0) {
+                let memberPercent = (actualMemberTotal / planMemberTotal * 100).toFixed(2);
+                document.getElementById('actual_member_percent').value = memberPercent;
+            }
+            
+            if(planNonmemberTotal > 0) {
+                let nonmemberPercent = (actualNonmemberTotal / planNonmemberTotal * 100).toFixed(2);
+                document.getElementById('actual_nonmember_percent').value = nonmemberPercent;
+            }
+            
+            if(planGrandTotal > 0) {
+                let totalPercent = (actualGrandTotal / planGrandTotal * 100).toFixed(2);
+                document.getElementById('actual_total_percent').value = totalPercent;
+            }
+            
+            // Get Additional values
+            let additionalMemberMale = parseFloat(document.getElementById('additional_member_male').value) || 0;
+            let additionalMemberFemale = parseFloat(document.getElementById('additional_member_female').value) || 0;
+            let additionalNonmemberMale = parseFloat(document.getElementById('additional_nonmember_male').value) || 0;
+            let additionalNonmemberFemale = parseFloat(document.getElementById('additional_nonmember_female').value) || 0;
+            
+            // Calculate Additional totals
+            let additionalMemberTotal = additionalMemberMale + additionalMemberFemale;
+            let additionalNonmemberTotal = additionalNonmemberMale + additionalNonmemberFemale;
+            
+            document.getElementById('additional_member_total').value = additionalMemberTotal;
+            document.getElementById('additional_nonmember_total').value = additionalNonmemberTotal;
+        }
+        
+        // Calculate on page load
+        window.onload = calculateAll;
+    </script>
+</body>
+</html>
