@@ -10,6 +10,19 @@ class ElectorRegistration_model extends CI_Model {
         $this->load->database();
     }
 
+    public function getPartyList() {
+        return array(
+            'Paartii Badhaadhinaa' => 'Paartii Badhaadhinaa',
+            'Paartii Haaromsaa' => 'Paartii Haaromsaa',
+            'Tumsa Tokkummaa Itoophiyaatiif' => 'Tumsa Tokkummaa Itoophiyaatiif',
+            'Paartii Bilisummaa fi Walqixxummaa' => 'Paartii Bilisummaa fi Walqixxummaa',
+            'Paartii Dhaloota Haaraa' => 'Paartii Dhaloota Haaraa',
+            'Izeemaa' => 'Izeemaa',
+            'Adda Bilisummaa Oromoo (ABO)' => 'Adda Bilisummaa Oromoo (ABO)',
+            'Other' => 'Other (Kan Biroo)'
+        );
+    }
+
     public function saveRegistration($data) {
         $this->db->insert($this->table, $data);
         return $this->db->insert_id();
@@ -102,8 +115,7 @@ class ElectorRegistration_model extends CI_Model {
     }
 
     public function getAllRegions() {
-        $this->db->distinct();
-        $this->db->select('naannoofil_id');
+        $this->db->select('DISTINCT naannoofil_id');
         $this->db->from($this->table);
         $this->db->where('status', 1);
         $this->db->order_by('naannoofil_id', 'ASC');

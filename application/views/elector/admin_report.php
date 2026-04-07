@@ -40,19 +40,20 @@
             <div class="box-header"><h3 class="box-title">District detail</h3></div>
             <div class="box-body table-responsive">
                 <table class="table table-bordered table-striped">
-                    <thead><tr><th>Date</th><th>Naannoo</th><th>Male</th><th>Female</th><th>Total</th><th>Status</th></tr></thead>
+                    <thead><tr><th>Date</th><th>Naannoo</th><th>Party</th><th>Male</th><th>Female</th><th>Total</th><th>Status</th></tr></thead>
                     <tbody>
                         <?php if(!empty($reports)): foreach($reports as $r): ?>
                             <tr>
                                 <td><?php echo $r->report_date; ?></td>
                                 <td><?php echo $r->naannoofil_id; ?></td>
+                                <td><?php echo $r->party_name; ?></td>
                                 <td><?php echo number_format($r->male_electors); ?></td>
                                 <td><?php echo number_format($r->female_electors); ?></td>
                                 <td><strong><?php echo number_format($r->total_electors); ?></strong></td>
                                 <td><?php echo ucfirst($r->security_status); ?></td>
                             </tr>
                         <?php endforeach; else: ?>
-                            <tr><td colspan="6" class="text-center">No data</td></tr>
+                            <tr><td colspan="7" class="text-center">No data</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

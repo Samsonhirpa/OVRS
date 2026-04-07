@@ -15,6 +15,15 @@
                         <input type="date" name="report_date" class="form-control" value="<?php echo $today; ?>" required>
                     </div>
                     <div class="form-group col-md-4">
+                        <label>Paartii</label>
+                        <select name="party_name" class="form-control" required>
+                            <option value="">-- Filadhu --</option>
+                            <?php foreach($parties as $value => $label): ?>
+                                <option value="<?php echo $value; ?>"><?php echo $label; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
                         <label>Haala Nageenyaa</label>
                         <select name="security_status" class="form-control" required>
                             <option value="green">Green (Very Safe)</option>
@@ -22,11 +31,11 @@
                             <option value="red">Red (Not Safe)</option>
                         </select>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label>Lakkoofsa Filattoota Dhiiraa</label>
                         <input type="number" min="0" name="male_electors" class="form-control" required>
                     </div>
-                    <div class="form-group col-md-4">
+                    <div class="form-group col-md-6">
                         <label>Lakkoofsa Filattoota Dubartii</label>
                         <input type="number" min="0" name="female_electors" class="form-control" required>
                     </div>

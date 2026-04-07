@@ -43,6 +43,7 @@ class ElectorRegistration extends CI_Controller {
         $data = $this->baseData('Galmee Lakkoofsa Filattootaa', 'electorRegister');
         $data['naannoofil'] = $naannoofil;
         $data['today'] = date('Y-m-d');
+        $data['parties'] = $this->ElectorRegistration_model->getPartyList();
 
         $this->load->view('layout/header', $data);
         $this->load->view('layout/topmenu', $data);
@@ -52,6 +53,7 @@ class ElectorRegistration extends CI_Controller {
     }
 
     public function save() {
+        $this->form_validation->set_rules('party_name', 'Paartii', 'required');
         $this->form_validation->set_rules('male_electors', 'Dhiira', 'required|integer|greater_than_equal_to[0]');
         $this->form_validation->set_rules('female_electors', 'Dubartii', 'required|integer|greater_than_equal_to[0]');
         $this->form_validation->set_rules('security_status', 'Situation', 'required|in_list[green,yellow,red]');
@@ -67,6 +69,7 @@ class ElectorRegistration extends CI_Controller {
         $data = array(
             'naannoofil_id' => $this->session->userdata('naannoofil'),
             'report_date' => $this->input->post('report_date') ?: date('Y-m-d'),
+            'party_name' => $this->input->post('party_name', TRUE),
             'male_electors' => $male,
             'female_electors' => $female,
             'total_electors' => $male + $female,
@@ -116,6 +119,7 @@ class ElectorRegistration extends CI_Controller {
 
         $data = $this->baseData('Fooyyessi Lakkoofsa Filattootaa', 'electorList');
         $data['record'] = $record;
+        $data['parties'] = $this->ElectorRegistration_model->getPartyList();
 
         $this->load->view('layout/header', $data);
         $this->load->view('layout/topmenu', $data);
@@ -135,6 +139,7 @@ class ElectorRegistration extends CI_Controller {
         $female = (int)$this->input->post('female_electors');
 
         $data = array(
+            'party_name' => $this->input->post('party_name', TRUE),
             'male_electors' => $male,
             'female_electors' => $female,
             'total_electors' => $male + $female,

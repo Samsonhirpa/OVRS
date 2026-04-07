@@ -16,13 +16,14 @@
                 <table class="table table-bordered table-striped">
                     <thead>
                         <tr>
-                            <th>Date</th><th>Male</th><th>Female</th><th>Total</th><th>Situation</th><th>Action</th>
+                            <th>Date</th><th>Party</th><th>Male</th><th>Female</th><th>Total</th><th>Situation</th><th>Action</th>
                         </tr>
                     </thead>
                     <tbody>
                     <?php if(!empty($reports)): foreach($reports as $row): ?>
                         <tr>
                             <td><?php echo $row->report_date; ?></td>
+                            <td><?php echo $row->party_name; ?></td>
                             <td><?php echo number_format($row->male_electors); ?></td>
                             <td><?php echo number_format($row->female_electors); ?></td>
                             <td><strong><?php echo number_format($row->total_electors); ?></strong></td>
@@ -37,7 +38,7 @@
                             </td>
                         </tr>
                     <?php endforeach; else: ?>
-                        <tr><td colspan="6" class="text-center">No data found.</td></tr>
+                        <tr><td colspan="7" class="text-center">No data found.</td></tr>
                     <?php endif; ?>
                     </tbody>
                 </table>

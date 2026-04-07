@@ -12,16 +12,17 @@
             <div class="box-header"><h3 class="box-title">Recent Registrations</h3></div>
             <div class="box-body table-responsive">
                 <table class="table table-striped table-bordered">
-                    <thead><tr><th>Date</th><th>Total</th><th>Situation</th></tr></thead>
+                    <thead><tr><th>Date</th><th>Party</th><th>Total</th><th>Situation</th></tr></thead>
                     <tbody>
                         <?php if(!empty($recent_reports)): foreach($recent_reports as $row): ?>
                             <tr>
                                 <td><?php echo $row->report_date; ?></td>
+                                <td><?php echo $row->party_name; ?></td>
                                 <td><?php echo number_format($row->total_electors); ?></td>
                                 <td><?php echo ucfirst($row->security_status); ?></td>
                             </tr>
                         <?php endforeach; else: ?>
-                            <tr><td colspan="3" class="text-center">No records found.</td></tr>
+                            <tr><td colspan="4" class="text-center">No records found.</td></tr>
                         <?php endif; ?>
                     </tbody>
                 </table>

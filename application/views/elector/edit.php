@@ -5,6 +5,14 @@
             <form method="post" action="<?php echo base_url('ElectorRegistration/update/'.$record->id); ?>">
                 <div class="box-body row">
                     <div class="form-group col-md-4">
+                        <label>Paartii</label>
+                        <select name="party_name" class="form-control" required>
+                            <?php foreach($parties as $value => $label): ?>
+                                <option value="<?php echo $value; ?>" <?php echo ($record->party_name == $value ? 'selected' : ''); ?>><?php echo $label; ?></option>
+                            <?php endforeach; ?>
+                        </select>
+                    </div>
+                    <div class="form-group col-md-4">
                         <label>Dhiira</label>
                         <input type="number" min="0" name="male_electors" value="<?php echo $record->male_electors; ?>" class="form-control" required>
                     </div>
