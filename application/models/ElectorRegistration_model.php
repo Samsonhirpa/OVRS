@@ -70,14 +70,15 @@ class ElectorRegistration_model extends CI_Model {
     public function getDashboardSummary($naannoofil, $month) {
         $summary = new stdClass();
 
+        // Monthly report count (how many submissions this month)
         $this->db->where('naannoofil_id', $naannoofil);
         $this->db->like('report_date', $month, 'after');
         $this->db->where('status', 1);
         $summary->total_reports = $this->db->count_all_results($this->table);
 
+        // Region cumulative totals (all-time for this naannoo filannoo)
         $this->db->select('SUM(male_electors) as male_total, SUM(female_electors) as female_total, SUM(total_electors) as grand_total');
         $this->db->where('naannoofil_id', $naannoofil);
-        $this->db->like('report_date', $month, 'after');
         $this->db->where('status', 1);
         $totals = $this->db->get($this->table)->row();
 
@@ -85,7 +86,21 @@ class ElectorRegistration_model extends CI_Model {
         $summary->female_total = (int)($totals->female_total ?: 0);
         $summary->grand_total = (int)($totals->grand_total ?: 0);
 
+        // Latest security status for this region
+        $summary->latest_security_status = $this->getLatestSecurityStatus($naannoofil);
+
         return $summary;
+    }
+
+    public function getLatestSecurityStatus($naannoofil) {
+        $this->db->select('security_status');
+        $this->db->where('naannoofil_id', $naannoofil);
+        $this->db->where('status', 1);
+        $this->db->order_by('report_date', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
+        $latest = $this->db->get($this->table, 1)->row();
+
+        return $latest ? $latest->security_status : 'unknown';
     }
 
     public function getRecentByRegion($naannoofil, $limit = 10) {
