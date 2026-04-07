@@ -12,6 +12,7 @@ class ElectionReport extends CI_Controller {
         $this->load->helper('url');
         
         $this->load->model('ElectionReport_model');
+        $this->load->model('ElectorRegistration_model');
     }
     
     /**
@@ -47,6 +48,13 @@ class ElectionReport extends CI_Controller {
             
             // Get today's date
             $today = date('Y-m-d');
+
+            // Must register elector count before election result
+            $hasElectorCount = $this->ElectorRegistration_model->hasRegionRegistrationOnDate($votingRegionCode, $today);
+            if(!$hasElectorCount) {
+                $this->session->set_flashdata('error', 'Bu\'aa filannoo galmeessuun dura lakkoofsa filattootaa galmeessuu qabdu.');
+                redirect('ElectorRegistration/register');
+            }
             
             // Get next serial number
             $serialNumber = $this->ElectionReport_model->getNextSerialNumber($votingRegionCode, $today);
@@ -137,6 +145,12 @@ class ElectionReport extends CI_Controller {
         $serialNumber = $this->input->post('serial_number');
         $partyName = $this->input->post('party_name');
         $remarks = $this->input->post('remarks');
+
+        // Validate elector count exists for same date before saving election result
+        if(!$this->ElectorRegistration_model->hasRegionRegistrationOnDate($votingRegionCode, $reportDate)) {
+            $this->session->set_flashdata('error', 'Guyyaa kanaaf lakkoofsa filattootaa jalqaba galmeessaa.');
+            redirect('ElectorRegistration/register');
+        }
         
         // Get male and female voters (simplified - no member/non-member)
         $maleVoters = (int)($this->input->post('male_voters') ?: 0);

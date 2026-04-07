@@ -63,3 +63,7 @@ $route['admin-election/party-reports'] = 'AdminElection/partyReports';
 $route['admin-election/region-reports'] = 'AdminElection/regionReports';
 $route['admin-election/view-report/(:num)'] = 'AdminElection/viewReport/$1';
 $route['admin-election/export'] = 'AdminElection/export';
+$route['elector/dashboard'] = 'ElectorRegistration/dashboard';
+$route['elector/register'] = 'ElectorRegistration/register';
+$route['elector/list'] = 'ElectorRegistration/listRecords';
+$route['elector/admin-report'] = 'ElectorRegistration/adminReport';
