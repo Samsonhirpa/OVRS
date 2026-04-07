@@ -524,6 +524,12 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
     </ul>
 </li>
 
+<li class="<?php echo (isset($activeMenu) && $activeMenu == 'electorAdminReport') ? 'active' : ''; ?>">
+    <a href="<?php echo base_url('ElectorRegistration/adminReport'); ?>">
+        <i class="fa fa-area-chart"></i> <span>Admin Elector Report</span>
+    </a>
+</li>
+
 
 
                     <!-- <li><a href="<?php echo base_url() ?>Structure/ReserchDocument"><i class="fa fa-file"></i><span>Sanadoota BDSO</span></a></li> -->
@@ -581,6 +587,24 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
         </li>
         <li>
             <a href="<?php echo base_url('ElectionReport/register'); ?>"><i class="fa fa-plus-circle"></i> Haaraa Galmeessi</a>
+        </li>
+    </ul>
+</li>
+
+<li class="treeview <?php echo (isset($activeMenu) && ($activeMenu == 'electorDashboard' || $activeMenu == 'electorList' || $activeMenu == 'electorRegister')) ? 'active' : ''; ?>">
+    <a href="#">
+        <i class="fa fa-users"></i> <span>Lakkoofsa Filattootaa</span>
+        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="<?php echo ($activeMenu == 'electorDashboard') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('ElectorRegistration/dashboard'); ?>"><i class="fa fa-dashboard"></i> Daashboordii</a>
+        </li>
+        <li class="<?php echo ($activeMenu == 'electorList') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('ElectorRegistration/listRecords'); ?>"><i class="fa fa-list"></i> Tarree</a>
+        </li>
+        <li class="<?php echo ($activeMenu == 'electorRegister') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('ElectorRegistration/register'); ?>"><i class="fa fa-plus-circle"></i> Haaraa Galmeessi</a>
         </li>
     </ul>
 </li>
