@@ -1,11 +1,39 @@
 <div class="content-wrapper">
+    <?php
+        $securityStatus = isset($summary->latest_security_status) ? strtolower($summary->latest_security_status) : 'unknown';
+        $securityColor = 'bg-gray';
+        $securityLabel = 'Unknown';
+
+        if ($securityStatus === 'green') {
+            $securityColor = 'bg-green';
+            $securityLabel = 'Green';
+        } elseif ($securityStatus === 'yellow') {
+            $securityColor = 'bg-yellow';
+            $securityLabel = 'Yellow';
+        } elseif ($securityStatus === 'red') {
+            $securityColor = 'bg-red';
+            $securityLabel = 'Red';
+        }
+    ?>
     <section class="content-header"><h1><?php echo $pageTitle; ?></h1></section>
     <section class="content">
         <div class="row">
             <div class="col-md-3"><div class="small-box bg-aqua"><div class="inner"><h3><?php echo number_format($summary->total_reports); ?></h3><p>Total Reports (Month)</p></div><div class="icon"><i class="fa fa-file"></i></div></div></div>
-            <div class="col-md-3"><div class="small-box bg-green"><div class="inner"><h3><?php echo number_format($summary->male_total); ?></h3><p>Male Electors</p></div><div class="icon"><i class="fa fa-mars"></i></div></div></div>
-            <div class="col-md-3"><div class="small-box bg-yellow"><div class="inner"><h3><?php echo number_format($summary->female_total); ?></h3><p>Female Electors</p></div><div class="icon"><i class="fa fa-venus"></i></div></div></div>
-            <div class="col-md-3"><div class="small-box bg-purple"><div class="inner"><h3><?php echo number_format($summary->grand_total); ?></h3><p>Total Electors</p></div><div class="icon"><i class="fa fa-users"></i></div></div></div>
+            <div class="col-md-3"><div class="small-box bg-green"><div class="inner"><h3><?php echo number_format($summary->male_total); ?></h3><p>Male Electors (Region Total)</p></div><div class="icon"><i class="fa fa-mars"></i></div></div></div>
+            <div class="col-md-3"><div class="small-box bg-yellow"><div class="inner"><h3><?php echo number_format($summary->female_total); ?></h3><p>Female Electors (Region Total)</p></div><div class="icon"><i class="fa fa-venus"></i></div></div></div>
+            <div class="col-md-3"><div class="small-box bg-purple"><div class="inner"><h3><?php echo number_format($summary->grand_total); ?></h3><p>Total Electors (Region Total)</p></div><div class="icon"><i class="fa fa-users"></i></div></div></div>
+        </div>
+
+        <div class="row">
+            <div class="col-md-3">
+                <div class="small-box <?php echo $securityColor; ?>">
+                    <div class="inner">
+                        <h3><?php echo $securityLabel; ?></h3>
+                        <p>Latest Security Status</p>
+                    </div>
+                    <div class="icon"><i class="fa fa-shield"></i></div>
+                </div>
+            </div>
         </div>
 
         <div class="box box-primary">
