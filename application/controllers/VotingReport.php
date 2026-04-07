@@ -15,8 +15,7 @@ class VotingReport extends CI_Controller {
         $this->load->model('usermodel', 'm');
         $this->load->model('bddddomodel', 'b');
         $this->load->model('Structure_model', 'str');
-        $this->load->model('Athlete_Model', 'athlete');
-        $this->load->model('Sportmodel', 'k');
+        
         
         // Load libraries
         $this->load->library('form_validation');

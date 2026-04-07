@@ -10,7 +10,7 @@ class BDDDDOcontroller extends CI_Controller {
             $this->lang->load('menu',$lang);
             $this->load->model('Bddddomodel', 'b');
             $this->load->model('Structure_model', 'str');
-            $this->load->model('Sportmodel', 'k');
+         
 
             //$this->load->library('Pdf_report');
             // $this->load->library(['ion_auth', 'form_validation']);
