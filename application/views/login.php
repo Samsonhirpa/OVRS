@@ -698,7 +698,7 @@
                     
                     <!-- Login Button -->
                     <button type="submit" class="btn-login">
-                        <i class="fa fa-sign-in"></i> Galmaa'u
+                        <i class="fa fa-sign-in"></i> Seenii
                     </button>
                 </form>
             </div>

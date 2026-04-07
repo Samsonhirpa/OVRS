@@ -69,7 +69,7 @@ class ElectionReport extends CI_Controller {
                 'last_login' => $this->session->userdata('last_login'),
                 'role' => $this->session->userdata('role'),
                 'role_text' => $this->getRoleText($this->session->userdata('role')),
-                'activeMenu' => 'electionRegister'  // ADD THIS LINE
+                'activeMenu' => 'electionRegister'
             );
             
             // Load layout with view
@@ -89,17 +89,15 @@ class ElectionReport extends CI_Controller {
      */
     private function getPartyList() {
         return array(
-            '' => '-- Paartii Filadhu --',
-            'Prosperity Party' => 'Prosperity Party (Paartii Badhaadhummaa)',
-            'OFDM' => 'OFDM',
-            'OLF' => 'OLF',
-            'ANDM' => 'ANDM',
-            'SPDP' => 'SPDP',
-            'GPUDM' => 'GPUDM',
-            'APDO' => 'APDO',
-            'OPDO' => 'OPDO',
-            'HNL' => 'HNL',
-            'Independent' => 'Independent (Miseensa Hin Qabne)',
+            'Paartii Badhaadhinaa' => 'Paartii Badhaadhinaa',
+            'Paartii Haaromsaa' => 'Paartii Haaromsaa',
+            'Tumsa Tokkummaa Itoophiyaatiif' => 'Tumsa Tokkummaa Itoophiyaatiif',
+            'Paartii Bilisummaa fi Walqixxummaa' => 'Paartii Bilisummaa fi Walqixxummaa',
+            'Paartii Dimokraatawaa Itoophiyaa Tokkoo' => 'Paartii Dimokraatawaa Itoophiyaa Tokkoo',
+            'Paartii Dhaloota Haaraa' => 'Paartii Dhaloota Haaraa',
+            'Izeemaa' => 'Izeemaa',
+            'Adda Bilisummaa Oromoo (ABO)' => 'Adda Bilisummaa Oromoo (ABO)',
+            'Paartii Dimokraatawaa Ummata Walloo' => 'Paartii Dimokraatawaa Ummata Walloo',
             'Other' => 'Other (Kan Biroo)'
         );
     }
@@ -140,33 +138,23 @@ class ElectionReport extends CI_Controller {
         $partyName = $this->input->post('party_name');
         $remarks = $this->input->post('remarks');
         
-        // Calculate totals
-        $memberMale = (int)($this->input->post('member_male') ?: 0);
-        $memberFemale = (int)($this->input->post('member_female') ?: 0);
-        $memberTotal = $memberMale + $memberFemale;
+        // Get male and female voters (simplified - no member/non-member)
+        $maleVoters = (int)($this->input->post('male_voters') ?: 0);
+        $femaleVoters = (int)($this->input->post('female_voters') ?: 0);
+        $grandTotal = $maleVoters + $femaleVoters;
         
-        $nonmemberMale = (int)($this->input->post('nonmember_male') ?: 0);
-        $nonmemberFemale = (int)($this->input->post('nonmember_female') ?: 0);
-        $nonmemberTotal = $nonmemberMale + $nonmemberFemale;
-        
-        $grandTotal = $memberTotal + $nonmemberTotal;
-        
-        // Prepare data array
+        // Prepare data array for new table structure
         $data = array(
             'naannoofil_id' => $votingRegionCode,
             'report_date' => $reportDate,
-            'report_session' => 'election',
+            'report_session' => $reportSession ?: 'afternoon',
             'report_time' => $reportTime,
             'serial_number' => $serialNumber,
             'reporter_id' => $userId,
             'reporter_name' => $reporterName ?: 'Unknown',
             'party_name' => $partyName,
-            'member_male' => $memberMale,
-            'member_female' => $memberFemale,
-            'member_total' => $memberTotal,
-            'nonmember_male' => $nonmemberMale,
-            'nonmember_female' => $nonmemberFemale,
-            'nonmember_total' => $nonmemberTotal,
+            'male_voters' => $maleVoters,
+            'female_voters' => $femaleVoters,
             'grand_total' => $grandTotal,
             'remarks' => $remarks,
             'created_at' => date('Y-m-d H:i:s'),
@@ -241,7 +229,7 @@ class ElectionReport extends CI_Controller {
                 'end_date' => $endDate,
                 'selected_party' => $party,
                 'parties' => $parties,
-                'activeMenu' => 'electionReports'  // ADD THIS LINE
+                'activeMenu' => 'electionReports'
             );
             
             $this->load->view('layout/header');
@@ -286,7 +274,7 @@ class ElectionReport extends CI_Controller {
                 'last_login' => $this->session->userdata('last_login'),
                 'report' => $report,
                 'voting_region_name' => $report->naannoofil_id,
-                'activeMenu' => 'electionReports'  // ADD THIS LINE
+                'activeMenu' => 'electionReports'
             );
             
             $this->load->view('layout/header');
@@ -340,7 +328,7 @@ class ElectionReport extends CI_Controller {
                 'report' => $report,
                 'parties' => $parties,
                 'voting_region_name' => $report->naannoofil_id,
-                'activeMenu' => 'electionReports'  // ADD THIS LINE
+                'activeMenu' => 'electionReports'
             );
             
             $this->load->view('layout/header');
@@ -381,26 +369,16 @@ class ElectionReport extends CI_Controller {
                 redirect('ElectionReport/listReports');
             }
             
-            // Calculate totals
-            $memberMale = (int)($this->input->post('member_male') ?: 0);
-            $memberFemale = (int)($this->input->post('member_female') ?: 0);
-            $memberTotal = $memberMale + $memberFemale;
-            
-            $nonmemberMale = (int)($this->input->post('nonmember_male') ?: 0);
-            $nonmemberFemale = (int)($this->input->post('nonmember_female') ?: 0);
-            $nonmemberTotal = $nonmemberMale + $nonmemberFemale;
-            
-            $grandTotal = $memberTotal + $nonmemberTotal;
+            // Get male and female voters
+            $maleVoters = (int)($this->input->post('male_voters') ?: 0);
+            $femaleVoters = (int)($this->input->post('female_voters') ?: 0);
+            $grandTotal = $maleVoters + $femaleVoters;
             
             // Prepare update data
             $updateData = array(
                 'party_name' => $this->input->post('party_name'),
-                'member_male' => $memberMale,
-                'member_female' => $memberFemale,
-                'member_total' => $memberTotal,
-                'nonmember_male' => $nonmemberMale,
-                'nonmember_female' => $nonmemberFemale,
-                'nonmember_total' => $nonmemberTotal,
+                'male_voters' => $maleVoters,
+                'female_voters' => $femaleVoters,
                 'grand_total' => $grandTotal,
                 'remarks' => $this->input->post('remarks'),
                 'updated_at' => date('Y-m-d H:i:s'),
@@ -495,7 +473,7 @@ class ElectionReport extends CI_Controller {
                 'party_breakdown' => $partyBreakdown,
                 'week_labels' => json_encode($weekData['labels']),
                 'week_data' => json_encode($weekData['data']),
-                'activeMenu' => 'electionDashboard'  // ADD THIS LINE
+                'activeMenu' => 'electionDashboard'
             );
             
             $this->load->view('layout/header');

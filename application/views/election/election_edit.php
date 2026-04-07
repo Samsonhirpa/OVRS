@@ -109,64 +109,42 @@
                                 </div>
                             </div>
                             
-                            <!-- Voter Statistics (Editable) -->
+                            <!-- Voter Statistics (Simplified: Male & Female Only) -->
                             <div style="margin-bottom: 30px;">
                                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 20px;">
                                     <div style="background: linear-gradient(135deg, #17a2b8, #138496); width: 6px; height: 28px; border-radius: 4px;"></div>
                                     <h4 style="margin: 0; font-size: 18px; font-weight: 600; color: #17a2b8;">
-                                        <i class="fa fa-bar-chart"></i> Lakkoofsa Filattoota
+                                        <i class="fa fa-bar-chart"></i> Lakkoofsa Filattoota (Saalaan)
                                     </h4>
                                 </div>
                                 <div class="row">
-                                    <!-- Member Voters -->
+                                    <!-- Male Voters Card -->
                                     <div class="col-md-6">
                                         <div style="border: 1px solid #e0e8e0; border-radius: 20px; overflow: hidden;">
                                             <div style="background: linear-gradient(135deg, #2c5f2d, #3e8e41); padding: 15px 20px;">
-                                                <h5 style="margin: 0; color: white;"><i class="fa fa-users"></i> Miseensa</h5>
+                                                <h5 style="margin: 0; color: white;"><i class="fa fa-mars"></i> Dhiira (Male)</h5>
                                             </div>
-                                            <div style="padding: 20px;">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <label style="font-weight: 600;">Dhiira</label>
-                                                        <input type="number" name="member_male" id="member_male" class="form-control" value="<?php echo $report->member_male; ?>" min="0" onchange="calculateTotal()" style="border-radius: 10px; font-size: 18px;">
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <label style="font-weight: 600;">Dubartii</label>
-                                                        <input type="number" name="member_female" id="member_female" class="form-control" value="<?php echo $report->member_female; ?>" min="0" onchange="calculateTotal()" style="border-radius: 10px; font-size: 18px;">
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top: 15px;">
-                                                    <div class="col-xs-12">
-                                                        <label style="font-weight: 600;">Ida'ama</label>
-                                                        <input type="text" name="member_total" id="member_total" class="form-control" readonly value="<?php echo $report->member_total; ?>" style="background: #e8f5e9; border-radius: 10px; font-weight: bold;">
-                                                    </div>
+                                            <div style="padding: 30px 20px; text-align: center;">
+                                                <div style="background: linear-gradient(135deg, #e8f5e9, #d4e8d4); border-radius: 20px; padding: 25px;">
+                                                    <i class="fa fa-mars" style="font-size: 48px; color: #2c5f2d;"></i>
+                                                    <h3 style="margin: 15px 0 10px; font-weight: 700;">Lakkoofsa Dhiiraa</h3>
+                                                    <input type="number" name="male_voters" id="male_voters" class="form-control" value="<?php echo $report->male_voters ?? 0; ?>" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 28px; font-weight: 800; border-radius: 12px; padding: 12px;">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <!-- Non-Member Voters -->
+                                    <!-- Female Voters Card -->
                                     <div class="col-md-6">
-                                        <div style="border: 1px solid #e0e8f0; border-radius: 20px; overflow: hidden;">
-                                            <div style="background: linear-gradient(135deg, #17a2b8, #138496); padding: 15px 20px;">
-                                                <h5 style="margin: 0; color: white;"><i class="fa fa-user-plus"></i> Miseensa Hin Taane</h5>
+                                        <div style="border: 1px solid #f0e0d0; border-radius: 20px; overflow: hidden;">
+                                            <div style="background: linear-gradient(135deg, #e67e22, #f39c12); padding: 15px 20px;">
+                                                <h5 style="margin: 0; color: white;"><i class="fa fa-venus"></i> Dubartii (Female)</h5>
                                             </div>
-                                            <div style="padding: 20px;">
-                                                <div class="row">
-                                                    <div class="col-xs-6">
-                                                        <label style="font-weight: 600;">Dhiira</label>
-                                                        <input type="number" name="nonmember_male" id="nonmember_male" class="form-control" value="<?php echo $report->nonmember_male; ?>" min="0" onchange="calculateTotal()" style="border-radius: 10px; font-size: 18px;">
-                                                    </div>
-                                                    <div class="col-xs-6">
-                                                        <label style="font-weight: 600;">Dubartii</label>
-                                                        <input type="number" name="nonmember_female" id="nonmember_female" class="form-control" value="<?php echo $report->nonmember_female; ?>" min="0" onchange="calculateTotal()" style="border-radius: 10px; font-size: 18px;">
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top: 15px;">
-                                                    <div class="col-xs-12">
-                                                        <label style="font-weight: 600;">Ida'ama</label>
-                                                        <input type="text" name="nonmember_total" id="nonmember_total" class="form-control" readonly value="<?php echo $report->nonmember_total; ?>" style="background: #e3f2fd; border-radius: 10px; font-weight: bold;">
-                                                    </div>
+                                            <div style="padding: 30px 20px; text-align: center;">
+                                                <div style="background: linear-gradient(135deg, #fde8e0, #f8d8c8); border-radius: 20px; padding: 25px;">
+                                                    <i class="fa fa-venus" style="font-size: 48px; color: #e67e22;"></i>
+                                                    <h3 style="margin: 15px 0 10px; font-weight: 700;">Lakkoofsa Dubartii</h3>
+                                                    <input type="number" name="female_voters" id="female_voters" class="form-control" value="<?php echo $report->female_voters ?? 0; ?>" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 28px; font-weight: 800; border-radius: 12px; padding: 12px;">
                                                 </div>
                                             </div>
                                         </div>
@@ -180,8 +158,13 @@
                                     <div class="col-md-12">
                                         <div style="background: linear-gradient(135deg, #1e4620 0%, #2c5f2d 100%); border-radius: 20px; padding: 25px; text-align: center;">
                                             <p style="margin: 0; color: rgba(255,255,255,0.8); font-size: 14px;">WALIIGALA FILATTOOTA</p>
-                                            <h2 style="margin: 10px 0 0; font-size: 42px; font-weight: 800; color: white;" id="grand_total_display"><?php echo number_format($report->grand_total); ?></h2>
-                                            <input type="hidden" name="grand_total" id="grand_total" value="<?php echo $report->grand_total; ?>">
+                                            <?php 
+                                                $male_voters = $report->male_voters ?? 0;
+                                                $female_voters = $report->female_voters ?? 0;
+                                                $grand_total = $male_voters + $female_voters;
+                                            ?>
+                                            <h2 style="margin: 10px 0 0; font-size: 42px; font-weight: 800; color: white;" id="grand_total_display"><?php echo number_format($grand_total); ?></h2>
+                                            <input type="hidden" name="grand_total" id="grand_total" value="<?php echo $grand_total; ?>">
                                         </div>
                                     </div>
                                 </div>
@@ -219,20 +202,12 @@
 
 <script>
 function calculateTotal() {
-    // Get member values
-    let memberMale = parseFloat(document.getElementById('member_male').value) || 0;
-    let memberFemale = parseFloat(document.getElementById('member_female').value) || 0;
-    let memberTotal = memberMale + memberFemale;
-    document.getElementById('member_total').value = memberTotal;
-    
-    // Get nonmember values
-    let nonmemberMale = parseFloat(document.getElementById('nonmember_male').value) || 0;
-    let nonmemberFemale = parseFloat(document.getElementById('nonmember_female').value) || 0;
-    let nonmemberTotal = nonmemberMale + nonmemberFemale;
-    document.getElementById('nonmember_total').value = nonmemberTotal;
+    // Get male and female values
+    let maleVoters = parseFloat(document.getElementById('male_voters').value) || 0;
+    let femaleVoters = parseFloat(document.getElementById('female_voters').value) || 0;
     
     // Calculate grand total
-    let grandTotal = memberTotal + nonmemberTotal;
+    let grandTotal = maleVoters + femaleVoters;
     document.getElementById('grand_total').value = grandTotal;
     document.getElementById('grand_total_display').innerHTML = grandTotal.toLocaleString();
 }

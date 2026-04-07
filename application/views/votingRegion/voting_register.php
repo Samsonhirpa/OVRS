@@ -286,7 +286,7 @@
                             <div class="row">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-success" style="padding: 8px 30px; font-weight: bold;" <?php echo ($morning_report && $afternoon_report) ? 'disabled' : ''; ?>>
-                                        <i class="fa fa-save"></i> Galmee Gabaa
+                                        <i class="fa fa-save"></i> Olkaa'i
                                     </button>
                                     <button type="reset" class="btn btn-warning" style="padding: 8px 30px; margin-left: 10px; font-weight: bold;">
                                         <i class="fa fa-undo"></i> Irra Deebi'i

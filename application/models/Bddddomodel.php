@@ -48,12 +48,12 @@ class Bddddomodel extends CI_Model {
                 'naannoofil' => $this->input->post('naannoofil'),
 
                 'region_id' => 1,
-                'woreda_id' => $this->input->post('woreda'),
+                // 'woreda_id' => $this->input->post('woreda'),
                 'zone_id' => $this->input->post('zone'),
-                'kebele' => $this->input->post('kebele'),
+                // 'kebele' => $this->input->post('kebele'),
                  'magala_id' => $this->input->post('magala_id'),
-                'kmagala_id' => $this->input->post('kmagala_id'),
-                'akmagala_id' => $this->input->post('akmagala_id'),
+                // 'kmagala_id' => $this->input->post('kmagala_id'),
+                // 'akmagala_id' => $this->input->post('akmagala_id'),
 //                'position' => $this->input->post('position'),
             );
             $query = $this->db->insert('useraccount', $data);

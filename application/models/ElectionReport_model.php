@@ -17,7 +17,6 @@ class ElectionReport_model extends CI_Model {
         // Check if report for this session already exists
         $this->db->where('naannoofil_id', $data['naannoofil_id']);
         $this->db->where('report_date', $data['report_date']);
-        $this->db->where('report_session', $data['report_session']);
         $this->db->where('party_name', $data['party_name']);
         $query = $this->db->get($this->table);
         
@@ -25,7 +24,6 @@ class ElectionReport_model extends CI_Model {
             // Update existing report
             $this->db->where('naannoofil_id', $data['naannoofil_id']);
             $this->db->where('report_date', $data['report_date']);
-            $this->db->where('report_session', $data['report_session']);
             $this->db->where('party_name', $data['party_name']);
             $data['updated_at'] = date('Y-m-d H:i:s');
             $this->db->update($this->table, $data);
@@ -37,14 +35,14 @@ class ElectionReport_model extends CI_Model {
         }
     }
 
-/**
- * Update report
- */
-public function updateReport($id, $data) {
-    $this->db->where('id', $id);
-    $this->db->update($this->table, $data);
-    return $this->db->affected_rows() > 0;
-}
+    /**
+     * Update report
+     */
+    public function updateReport($id, $data) {
+        $this->db->where('id', $id);
+        $this->db->update($this->table, $data);
+        return $this->db->affected_rows() > 0;
+    }
     
     /**
      * Get session report
@@ -73,15 +71,11 @@ public function updateReport($id, $data) {
     /**
      * Get reports by date range
      */
-    public function getReportsByDateRange($naannoofil_id, $startDate, $endDate, $session = 'all', $party = 'all') {
+    public function getReportsByDateRange($naannoofil_id, $startDate, $endDate, $party = 'all') {
         $this->db->where('naannoofil_id', $naannoofil_id);
         $this->db->where('report_date >=', $startDate);
         $this->db->where('report_date <=', $endDate);
         $this->db->where('status', 1);
-        
-        if($session != 'all') {
-            $this->db->where('report_session', $session);
-        }
         
         if($party != 'all' && !empty($party)) {
             $this->db->where('party_name', $party);
@@ -93,15 +87,15 @@ public function updateReport($id, $data) {
         return $query->result();
     }
     
- /**
- * Get report by ID
- */
-public function getReportById($id) {
-    $this->db->where('id', $id);
-    $this->db->where('status', 1);
-    $query = $this->db->get($this->table);
-    return $query->row();
-}
+    /**
+     * Get report by ID
+     */
+    public function getReportById($id) {
+        $this->db->where('id', $id);
+        $this->db->where('status', 1);
+        $query = $this->db->get($this->table);
+        return $query->row();
+    }
     
     /**
      * Delete report
@@ -113,7 +107,7 @@ public function getReportById($id) {
     }
     
     /**
-     * Get reports summary
+     * Get reports summary (Updated for male_voters/female_voters)
      */
     public function getReportsSummary($naannoofil_id, $startDate, $endDate) {
         $summary = new stdClass();
@@ -125,7 +119,7 @@ public function getReportById($id) {
         $this->db->where('status', 1);
         $summary->total_reports = $this->db->count_all_results($this->table);
         
-        // Total voters
+        // Total voters (grand_total)
         $this->db->select('SUM(grand_total) as total_voters');
         $this->db->where('naannoofil_id', $naannoofil_id);
         $this->db->where('report_date >=', $startDate);
@@ -135,31 +129,31 @@ public function getReportById($id) {
         $result = $query->row();
         $summary->total_voters = $result->total_voters ?: 0;
         
-        // Total members
-        $this->db->select('SUM(member_total) as total_members');
+        // Total male voters
+        $this->db->select('SUM(male_voters) as total_male_voters');
         $this->db->where('naannoofil_id', $naannoofil_id);
         $this->db->where('report_date >=', $startDate);
         $this->db->where('report_date <=', $endDate);
         $this->db->where('status', 1);
         $query = $this->db->get($this->table);
         $result = $query->row();
-        $summary->total_members = $result->total_members ?: 0;
+        $summary->total_male_voters = $result->total_male_voters ?: 0;
         
-        // Total non-members
-        $this->db->select('SUM(nonmember_total) as total_nonmembers');
+        // Total female voters
+        $this->db->select('SUM(female_voters) as total_female_voters');
         $this->db->where('naannoofil_id', $naannoofil_id);
         $this->db->where('report_date >=', $startDate);
         $this->db->where('report_date <=', $endDate);
         $this->db->where('status', 1);
         $query = $this->db->get($this->table);
         $result = $query->row();
-        $summary->total_nonmembers = $result->total_nonmembers ?: 0;
+        $summary->total_female_voters = $result->total_female_voters ?: 0;
         
         return $summary;
     }
     
     /**
-     * Get dashboard summary
+     * Get dashboard summary (Updated for male_voters/female_voters)
      */
     public function getDashboardSummary($naannoofil_id, $month) {
         $summary = new stdClass();
@@ -186,35 +180,18 @@ public function getReportById($id) {
         $this->db->where('status', 1);
         $summary->today_reports = $this->db->count_all_results($this->table);
         
-        // Morning vs Afternoon counts
-        $this->db->where('naannoofil_id', $naannoofil_id);
-        $this->db->where('DATE_FORMAT(report_date, "%Y-%m") =', $month);
-        $this->db->where('report_session', 'morning');
-        $this->db->where('status', 1);
-        $summary->morning_count = $this->db->count_all_results($this->table);
-        
-        $this->db->where('naannoofil_id', $naannoofil_id);
-        $this->db->where('DATE_FORMAT(report_date, "%Y-%m") =', $month);
-        $this->db->where('report_session', 'afternoon');
-        $this->db->where('status', 1);
-        $summary->afternoon_count = $this->db->count_all_results($this->table);
-        
         return $summary;
     }
     
     /**
-     * Get party breakdown for current month
+     * Get party breakdown for current month (Updated for male_voters/female_voters)
      */
     public function getPartyBreakdown($naannoofil_id, $month) {
         $this->db->select('
             party_name,
             COUNT(*) as report_count,
-            SUM(member_male) as member_male,
-            SUM(member_female) as member_female,
-            SUM(member_total) as member_total,
-            SUM(nonmember_male) as nonmember_male,
-            SUM(nonmember_female) as nonmember_female,
-            SUM(nonmember_total) as nonmember_total,
+            SUM(male_voters) as male_voters,
+            SUM(female_voters) as female_voters,
             SUM(grand_total) as total_voters
         ');
         $this->db->where('naannoofil_id', $naannoofil_id);
@@ -227,7 +204,7 @@ public function getReportById($id) {
     }
     
     /**
-     * Get last 7 days data for chart
+     * Get last 7 days data for chart (Updated for male_voters/female_voters)
      */
     public function getLast7DaysData($naannoofil_id) {
         $labels = array();

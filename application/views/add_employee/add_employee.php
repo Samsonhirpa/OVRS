@@ -127,7 +127,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group" style="margin-bottom: 20px;">
                                         <label style="font-weight: 600; color: #555; margin-bottom: 8px; display: block;">
-                                            Maqaa Herregaa <span style="color: #dc3545;">*</span>
+                                            Maqaa Fayyadamaa <span style="color: #dc3545;">*</span>
                                         </label>
                                         <div class="input-group" style="border-radius: 8px; overflow: hidden;">
                                             <span class="input-group-addon" style="background: #f8f9fa; border: 1px solid #e0e0e0; border-right: none;">

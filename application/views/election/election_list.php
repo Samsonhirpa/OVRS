@@ -90,7 +90,7 @@
                     </div>
                 </div>
                 
-                <!-- Summary Stats Cards -->
+                <!-- Summary Stats Cards (Updated: Male & Female only) -->
                 <div class="row" style="margin-bottom: 25px;">
                     <div class="col-md-3">
                         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 20px; color: white;">
@@ -106,27 +106,27 @@
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%); border-radius: 16px; padding: 20px; color: white;">
+                        <div style="background: linear-gradient(135deg, #2c5f2d 0%, #3e8e41 100%); border-radius: 16px; padding: 20px; color: white;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">MISEENSA</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_members ?? 0); ?></h2>
+                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">DHIIRA (MALE)</p>
+                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_male_voters ?? 0); ?></h2>
                                 </div>
                                 <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-users" style="font-size: 24px;"></i>
+                                    <i class="fa fa-mars" style="font-size: 24px;"></i>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%); border-radius: 16px; padding: 20px; color: white;">
+                        <div style="background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%); border-radius: 16px; padding: 20px; color: white;">
                             <div style="display: flex; justify-content: space-between; align-items: center;">
                                 <div>
-                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">MISEENSA HIN TAANE</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_nonmembers ?? 0); ?></h2>
+                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">DUBARTII (FEMALE)</p>
+                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_female_voters ?? 0); ?></h2>
                                 </div>
                                 <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-user-plus" style="font-size: 24px;"></i>
+                                    <i class="fa fa-venus" style="font-size: 24px;"></i>
                                 </div>
                             </div>
                         </div>
@@ -146,7 +146,7 @@
                     </div>
                 </div>
                 
-                <!-- Reports Table Card -->
+                <!-- Reports Table Card (Updated: Male & Female only) -->
                 <div style="background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); overflow: hidden;">
                     <div style="background: linear-gradient(135deg, #2c5f2d, #1e4620); padding: 18px 25px;">
                         <h4 style="margin: 0; color: white; font-weight: 600;">
@@ -170,8 +170,8 @@
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">#</th>
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d;">Guyyaa & Yeroo</th>
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d;">Paartii</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Miseensa (Dhi/Dub)</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Miseensa Hin Taane (Dhi/Dub)</th>
+                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Dhiira (Male)</th>
+                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Dubartii (Female)</th>
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Waliigala</th>
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Haala</th>
                                         <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Gocha</th>
@@ -188,33 +188,40 @@
                                         $can_edit = ($timeDiff <= 1);
                                         $remaining_minutes = floor((60 - (($currentTime - $reportTime) / 60)));
                                         if($remaining_minutes < 0) $remaining_minutes = 0;
+                                        
+                                        // Use new column names
+                                        $male_voters = $report->male_voters ?? 0;
+                                        $female_voters = $report->female_voters ?? 0;
+                                        $grand_total = $male_voters + $female_voters;
                                     ?>
                                     <tr style="border-bottom: 1px solid #edf2f7; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
                                         <td style="padding: 12px; text-align: center; font-weight: 600;"><?php echo $i++; ?></td>
                                         <td style="padding: 12px;">
                                             <strong><?php echo date('d/m/Y', strtotime($report->report_date)); ?></strong><br>
                                             <small style="color: #718096;"><i class="fa fa-clock-o"></i> <?php echo date('H:i', strtotime($report->created_at)); ?></small>
-                                         </td>
+                                        </td>
                                         <td style="padding: 12px;">
                                             <span style="background: linear-gradient(135deg, #e67e22, #f39c12); color: white; padding: 5px 12px; border-radius: 20px; font-size: 12px; font-weight: 600; display: inline-block;">
                                                 <?php echo $report->party_name; ?>
                                             </span>
-                                         </td>
+                                        </td>
                                         <td style="padding: 12px; text-align: center;">
-                                            <span style="font-weight: 600; color: #2c5f2d;"><?php echo number_format($report->member_male); ?></span> / 
-                                            <span style="font-weight: 600; color: #e67e22;"><?php echo number_format($report->member_female); ?></span>
-                                            <br><small style="color: #718096;">Ida'ama: <?php echo number_format($report->member_total); ?></small>
-                                         </td>
+                                            <div style="background: linear-gradient(135deg, #2c5f2d20, #3e8e4130); border-radius: 12px; padding: 8px; display: inline-block; min-width: 80px;">
+                                                <i class="fa fa-mars" style="color: #2c5f2d;"></i>
+                                                <strong style="font-size: 18px; color: #2c5f2d; margin-left: 8px;"><?php echo number_format($male_voters); ?></strong>
+                                            </div>
+                                        </td>
                                         <td style="padding: 12px; text-align: center;">
-                                            <span style="font-weight: 600; color: #17a2b8;"><?php echo number_format($report->nonmember_male); ?></span> / 
-                                            <span style="font-weight: 600; color: #f39c12;"><?php echo number_format($report->nonmember_female); ?></span>
-                                            <br><small style="color: #718096;">Ida'ama: <?php echo number_format($report->nonmember_total); ?></small>
-                                         </td>
+                                            <div style="background: linear-gradient(135deg, #e67e2220, #f39c1230); border-radius: 12px; padding: 8px; display: inline-block; min-width: 80px;">
+                                                <i class="fa fa-venus" style="color: #e67e22;"></i>
+                                                <strong style="font-size: 18px; color: #e67e22; margin-left: 8px;"><?php echo number_format($female_voters); ?></strong>
+                                            </div>
+                                        </td>
                                         <td style="padding: 12px; text-align: center;">
-                                            <span style="background: #e8f5e9; padding: 8px 12px; border-radius: 12px; font-weight: 800; color: #2c5f2d; display: inline-block;">
-                                                <?php echo number_format($report->grand_total); ?>
+                                            <span style="background: #e8f5e9; padding: 8px 15px; border-radius: 12px; font-weight: 800; color: #2c5f2d; display: inline-block;">
+                                                <?php echo number_format($grand_total); ?>
                                             </span>
-                                         </td>
+                                        </td>
                                         <td style="padding: 12px; text-align: center;">
                                             <?php if($can_edit): ?>
                                                 <span style="background: #fff3e0; color: #e67e22; padding: 4px 10px; border-radius: 20px; font-size: 11px; font-weight: 600;">
@@ -226,7 +233,7 @@
                                                     <i class="fa fa-clock-o"></i> Yeroo darbe
                                                 </span>
                                             <?php endif; ?>
-                                         </td>
+                                        </td>
                                         <td style="padding: 12px; text-align: center;">
                                             <div style="display: flex; gap: 5px; justify-content: center;">
                                                 <a href="<?php echo base_url('ElectionReport/viewReport/'.$report->id); ?>" class="btn btn-sm" style="background: #17a2b8; color: white; border-radius: 8px; padding: 6px 12px; transition: all 0.2s;" title="Ilaalchuu">
@@ -248,26 +255,26 @@
                                                     </button>
                                                 <?php endif; ?>
                                             </div>
-                                         </td>
-                                     </tr>
+                                        </td>
+                                    </tr>
                                     <?php endforeach; ?>
                                 </tbody>
                                 <tfoot>
                                     <tr style="background: #f8fafc; border-top: 2px solid #e2e8f0; font-weight: 700;">
                                         <td colspan="3" style="padding: 15px 12px; text-align: right;"><strong>WALIIGALA:</strong></td>
                                         <td style="padding: 15px 12px; text-align: center;">
-                                            <strong><?php echo number_format($summary->total_members ?? 0); ?></strong>
-                                            <br><small>Miseensa</small>
-                                         </td>
+                                            <strong style="font-size: 18px; color: #2c5f2d;"><?php echo number_format($summary->total_male_voters ?? 0); ?></strong>
+                                            <br><small>Dhiira</small>
+                                        </td>
                                         <td style="padding: 15px 12px; text-align: center;">
-                                            <strong><?php echo number_format($summary->total_nonmembers ?? 0); ?></strong>
-                                            <br><small>Hin Miseensa</small>
-                                         </td>
+                                            <strong style="font-size: 18px; color: #e67e22;"><?php echo number_format($summary->total_female_voters ?? 0); ?></strong>
+                                            <br><small>Dubartii</small>
+                                        </td>
                                         <td style="padding: 15px 12px; text-align: center;">
-                                            <strong style="font-size: 18px; color: #2c5f2d;"><?php echo number_format($summary->total_voters ?? 0); ?></strong>
-                                         </td>
+                                            <strong style="font-size: 20px; color: #1e4620;"><?php echo number_format($summary->total_voters ?? 0); ?></strong>
+                                        </td>
                                         <td colspan="2"></td>
-                                     </tr>
+                                    </tr>
                                 </tfoot>
                             </table>
                         <?php endif; ?>

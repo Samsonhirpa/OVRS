@@ -466,7 +466,7 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
                 <!-- Admin Menu -->
                 <ul class="sidebar-menu" data-widget="tree">
                     <li class="header">NAVIGATION</li>
-                    <li><a href="<?php echo base_url() ?>Structure/dashboard"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+                  
                     
                     <li class="treeview">
                         <a href="#">
@@ -479,12 +479,58 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
                         </ul>
                     </li>
 
-                            <li><a href="<?php echo base_url() ?>VotingReport/listReportAll"><i class="fa fa-list-alt"></i>Gabaasa Filanno Waliigalaa</a></li>
+
+      <!-- Election Management for Admin -->
+<li class="treeview <?php echo (isset($activeMenu) && ($activeMenu == 'adminElectionDashboard' || $activeMenu == 'adminElectionPartyReports' || $activeMenu == 'adminElectionRegionReports')) ? 'active' : ''; ?>">
+    <a href="#">
+
+        <i class="fa fa-check-square-o"></i> <span>Gabaasa Galmee Guyyaa Guyyaa</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+          <li><a href="<?php echo base_url() ?>Structure/dashboard"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
+
+        <li><a href="<?php echo base_url() ?>VotingReport/listReportAll"><i class="fa fa-list-alt"></i>Gabaasaa Waliigalaa</a></li>
+
+           </ul>
+           </li>        
+ 
+      <!-- Election Management for Admin -->
+<li class="treeview <?php echo (isset($activeMenu) && ($activeMenu == 'adminElectionDashboard' || $activeMenu == 'adminElectionPartyReports' || $activeMenu == 'adminElectionRegionReports')) ? 'active' : ''; ?>">
+    <a href="#">
+        <i class="fa fa-check-square-o"></i> <span>Bu'aa Filannoo</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="<?php echo (isset($activeMenu) && $activeMenu == 'adminElectionDashboard') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('AdminElection/dashboard'); ?>">
+                <i class="fa fa-dashboard"></i> Daashboordii
+            </a>
+        </li>
+        <li class="<?php echo (isset($activeMenu) && $activeMenu == 'adminElectionPartyReports') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('AdminElection/partyReports'); ?>">
+                <i class="fa fa-flag"></i> Gabaasa Paartii
+            </a>
+        </li>
+        <li class="<?php echo (isset($activeMenu) && $activeMenu == 'adminElectionRegionReports') ? 'active' : ''; ?>">
+            <a href="<?php echo base_url('AdminElection/regionReports'); ?>">
+                <i class="fa fa-map-marker"></i> Gabaasa Naannoo
+            </a>
+        </li>
+    </ul>
+</li>
 
 
-                   
+
                     <!-- <li><a href="<?php echo base_url() ?>Structure/ReserchDocument"><i class="fa fa-file"></i><span>Sanadoota BDSO</span></a></li> -->
-                    <li><a href="<?php echo base_url() ?>Structure/manage_ipcomment"><i class="fa fa-comments"></i><span>Yaadota</span></a></li>
+              <!--       <li><a href="<?php echo base_url() ?>Structure/manage_ipcomment"><i class="fa fa-comments"></i><span>Yaadota</span></a></li>
+
+
+
 
                     <li class="treeview">
                         <a href="#">
@@ -499,7 +545,7 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
                             <li><a href="<?php echo base_url('Structure/Subcity') ?>"><i class="fa fa-link"></i>K/Magaalaa</a></li>
                             <li><a href="<?php echo base_url('Structure/AKmagala') ?>"><i class="fa fa-link"></i>A/K/Magaalaa</a></li>
                         </ul>
-                    </li>
+                    </li> -->
                 </ul>
 
             <?php elseif ($this->session->userdata('role') == 3): ?>
@@ -508,15 +554,22 @@ body.sidebar-mini .main-sidebar:hover .user-panel .image {
                     <li class="header">NAVIGATION</li>
                     <li><a href="<?php echo base_url() ?>VotingReport/dashboard"><i class="fa fa-dashboard"></i><span>Dashboard</span></a></li>
                     
-                            <li><a href="<?php echo base_url() ?>VotingReport/register"><i class="fa fa-plus-circle"></i>Gabaasa Filanno dabali</a></li>
+
+        <li class="treeview <?php echo ($activeMenu == 'electionDashboard' || $activeMenu == 'electionReports') ? 'active' : ''; ?>">
+    <a href="#">
+        <i class="fa fa-check-square-o"></i> <span>Gabaasa Galmee Guyyaa Guyyaa</span>
+        <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
+    </a>
+    <ul class="treeview-menu">
+                            <li><a href="<?php echo base_url() ?>VotingReport/register"><i class="fa fa-plus-circle"></i>Gabaasa dabali</a></li>
                    
-                            <li><a href="<?php echo base_url() ?>VotingReport/listReports"><i class="fa fa-list-alt"></i>Gabaasa Filanno To'adhu</a></li>
-                    
+                            <li><a href="<?php echo base_url() ?>VotingReport/listReports"><i class="fa fa-list-alt"></i>Gabaasa To'adhu</a></li>
+                    </ul>
                     </li>
 
                     <li class="treeview <?php echo ($activeMenu == 'electionDashboard' || $activeMenu == 'electionReports') ? 'active' : ''; ?>">
     <a href="#">
-        <i class="fa fa-check-square-o"></i> <span>Filannoo Paartii</span>
+        <i class="fa fa-check-square-o"></i> <span>Bu'aa Filannoo </span>
         <span class="pull-right-container"><i class="fa fa-angle-left pull-right"></i></span>
     </a>
     <ul class="treeview-menu">

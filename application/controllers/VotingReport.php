@@ -103,7 +103,8 @@ class VotingReport extends CI_Controller {
                 'profile_image' => $this->session->userdata('profile_image'),
                 'last_login' => $this->session->userdata('last_login'),
                 'role' => $this->session->userdata('role'),
-                'role_text' => $this->getRoleText($this->session->userdata('role'))
+                'role_text' => $this->getRoleText($this->session->userdata('role')),
+                'activeMenu' => 'register'  // FIX: Added activeMenu variable
             );
             
             // Load layout with view

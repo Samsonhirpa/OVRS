@@ -68,14 +68,16 @@
                     <form method="post" action="<?php echo base_url('ElectionReport/save'); ?>" id="electionForm">
                         <div style="padding: 30px;">
                             
-                            <!-- Hidden Fields -->
+                            <!-- Hidden Fields matching database columns -->
                             <input type="hidden" name="naannoofil_id" value="<?php echo $naannoofil; ?>">
                             <input type="hidden" name="report_date" value="<?php echo $today; ?>">
+                            <input type="hidden" name="report_session" value="afternoon">
                             <input type="hidden" name="report_time" value="<?php echo $current_time; ?>">
                             <input type="hidden" name="serial_number" value="<?php echo $serial_number; ?>">
                             <input type="hidden" name="reporter_id" value="<?php echo $reporter_id; ?>">
                             <input type="hidden" name="reporter_name" value="<?php echo $reporter_name; ?>">
-                            <input type="hidden" name="report_session" value="election">
+                            <input type="hidden" name="created_by" value="<?php echo $reporter_id; ?>">
+                            <input type="hidden" name="status" value="active">
                             
                             <!-- Section 1: Election Information -->
                             <div style="margin-bottom: 35px;">
@@ -144,98 +146,60 @@
                                 </div>
                             </div>
                             
-                            <!-- Section 3: Voter Statistics - Professional Cards Layout -->
+                            <!-- Section 3: Voter Statistics - Male & Female Only -->
                             <div style="margin-bottom: 35px;">
                                 <div style="display: flex; align-items: center; gap: 12px; margin-bottom: 25px;">
                                     <div style="background: linear-gradient(135deg, #17a2b8, #138496); width: 6px; height: 28px; border-radius: 4px;"></div>
                                     <h4 style="margin: 0; font-size: 18px; font-weight: 600; color: #17a2b8;">
-                                        <i class="fa fa-bar-chart"></i> Lakkoofsa Filattoota
+                                        <i class="fa fa-bar-chart"></i> Lakkoofsa Filattoota (Saalaan)
                                     </h4>
                                 </div>
                                 
-                                <!-- Two Column Layout for Member and Non-Member -->
+                                <!-- Two Column Layout for Male and Female -->
                                 <div class="row">
-                                    <!-- Member Voters Card -->
+                                    <!-- Male Voters Card -->
                                     <div class="col-md-6">
                                         <div style="background: linear-gradient(135deg, #ffffff 0%, #f8fff8 100%); border: 1px solid #e0e8e0; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s ease;">
                                             <div style="background: linear-gradient(135deg, #2c5f2d, #3e8e41); padding: 16px 20px;">
                                                 <div style="display: flex; align-items: center; gap: 12px;">
                                                     <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                                        <i class="fa fa-users" style="color: white; font-size: 18px;"></i>
+                                                        <i class="fa fa-mars" style="color: white; font-size: 20px;"></i>
                                                     </div>
                                                     <div>
-                                                        <h5 style="margin: 0; color: white; font-weight: 600; font-size: 16px;">Miseensa</h5>
-                                                        <p style="margin: 2px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">Member Voters</p>
+                                                        <h5 style="margin: 0; color: white; font-weight: 600; font-size: 18px;">Dhiira</h5>
+                                                        <p style="margin: 2px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">Male Voters</p>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style="padding: 25px 20px;">
-                                                <div class="row">
-                                                    <div class="col-xs-6 text-center">
-                                                        <div style="background: linear-gradient(135deg, #f0f4f0, #e8f0e8); border-radius: 16px; padding: 20px 15px;">
-                                                            <i class="fa fa-mars" style="font-size: 28px; color: #2c5f2d;"></i>
-                                                            <h5 style="margin: 10px 0 5px; font-weight: 600; color: #2c5f2d;">Dhiira</h5>
-                                                            <input type="number" name="member_male" id="member_male" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 22px; font-weight: 700; border: none; background: transparent; padding: 5px;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6 text-center">
-                                                        <div style="background: linear-gradient(135deg, #fdf4f0, #fde8e0); border-radius: 16px; padding: 20px 15px;">
-                                                            <i class="fa fa-venus" style="font-size: 28px; color: #e67e22;"></i>
-                                                            <h5 style="margin: 10px 0 5px; font-weight: 600; color: #e67e22;">Dubartii</h5>
-                                                            <input type="number" name="member_female" id="member_female" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 22px; font-weight: 700; border: none; background: transparent; padding: 5px;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top: 20px;">
-                                                    <div class="col-xs-12">
-                                                        <div style="background: #e8f5e9; border-radius: 12px; padding: 12px; text-align: center;">
-                                                            <span style="font-size: 13px; color: #2c5f2d; font-weight: 600;">IDA'AMA MISEENSA</span>
-                                                            <input type="text" name="member_total" id="member_total" class="form-control" readonly value="0" style="text-align: center; font-size: 24px; font-weight: 800; background: transparent; border: none; color: #2c5f2d;">
-                                                        </div>
-                                                    </div>
+                                            <div style="padding: 30px 20px; text-align: center;">
+                                                <div style="background: linear-gradient(135deg, #f0f4f0, #e8f0e8); border-radius: 20px; padding: 25px 15px;">
+                                                    <i class="fa fa-mars" style="font-size: 42px; color: #2c5f2d;"></i>
+                                                    <h4 style="margin: 15px 0 10px; font-weight: 700; color: #1e4620;">Lakkoofsa Dhiiraa</h4>
+                                                    <input type="number" name="male_voters" id="male_voters" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 28px; font-weight: 800; border: 2px solid #d4e2d4; background: white; border-radius: 16px; padding: 12px;">
                                                 </div>
                                             </div>
                                         </div>
                                     </div>
                                     
-                                    <!-- Non-Member Voters Card -->
+                                    <!-- Female Voters Card -->
                                     <div class="col-md-6">
-                                        <div style="background: linear-gradient(135deg, #ffffff 0%, #f0f8ff 100%); border: 1px solid #e0e8f0; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s ease;">
-                                            <div style="background: linear-gradient(135deg, #17a2b8, #138496); padding: 16px 20px;">
+                                        <div style="background: linear-gradient(135deg, #ffffff 0%, #fff8f0 100%); border: 1px solid #f0e0d0; border-radius: 20px; overflow: hidden; box-shadow: 0 4px 12px rgba(0,0,0,0.03); transition: all 0.3s ease;">
+                                            <div style="background: linear-gradient(135deg, #e67e22, #f39c12); padding: 16px 20px;">
                                                 <div style="display: flex; align-items: center; gap: 12px;">
                                                     <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center;">
-                                                        <i class="fa fa-user-plus" style="color: white; font-size: 18px;"></i>
+                                                        <i class="fa fa-venus" style="color: white; font-size: 20px;"></i>
                                                     </div>
                                                     <div>
-                                                        <h5 style="margin: 0; color: white; font-weight: 600; font-size: 16px;">Miseensa Hin Taane</h5>
-                                                        <p style="margin: 2px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">Non-Member Voters</p>
+                                                        <h5 style="margin: 0; color: white; font-weight: 600; font-size: 18px;">Dubartii</h5>
+                                                        <p style="margin: 2px 0 0; color: rgba(255,255,255,0.8); font-size: 12px;">Female Voters</p>
                                                     </div>
                                                 </div>
                                             </div>
-                                            <div style="padding: 25px 20px;">
-                                                <div class="row">
-                                                    <div class="col-xs-6 text-center">
-                                                        <div style="background: linear-gradient(135deg, #f0f4f0, #e8f0e8); border-radius: 16px; padding: 20px 15px;">
-                                                            <i class="fa fa-mars" style="font-size: 28px; color: #17a2b8;"></i>
-                                                            <h5 style="margin: 10px 0 5px; font-weight: 600; color: #17a2b8;">Dhiira</h5>
-                                                            <input type="number" name="nonmember_male" id="nonmember_male" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 22px; font-weight: 700; border: none; background: transparent; padding: 5px;">
-                                                        </div>
-                                                    </div>
-                                                    <div class="col-xs-6 text-center">
-                                                        <div style="background: linear-gradient(135deg, #fdf4f0, #fde8e0); border-radius: 16px; padding: 20px 15px;">
-                                                            <i class="fa fa-venus" style="font-size: 28px; color: #f39c12;"></i>
-                                                            <h5 style="margin: 10px 0 5px; font-weight: 600; color: #f39c12;">Dubartii</h5>
-                                                            <input type="number" name="nonmember_female" id="nonmember_female" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 22px; font-weight: 700; border: none; background: transparent; padding: 5px;">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                                <div class="row" style="margin-top: 20px;">
-                                                    <div class="col-xs-12">
-                                                        <div style="background: #e3f2fd; border-radius: 12px; padding: 12px; text-align: center;">
-                                                            <span style="font-size: 13px; color: #17a2b8; font-weight: 600;">IDA'AMA MISEENSA HIN TAANE</span>
-                                                            <input type="text" name="nonmember_total" id="nonmember_total" class="form-control" readonly value="0" style="text-align: center; font-size: 24px; font-weight: 800; background: transparent; border: none; color: #17a2b8;">
-                                                        </div>
-                                                    </div>
+                                            <div style="padding: 30px 20px; text-align: center;">
+                                                <div style="background: linear-gradient(135deg, #fdf4f0, #fde8e0); border-radius: 20px; padding: 25px 15px;">
+                                                    <i class="fa fa-venus" style="font-size: 42px; color: #e67e22;"></i>
+                                                    <h4 style="margin: 15px 0 10px; font-weight: 700; color: #b85c00;">Lakkoofsa Dubartii</h4>
+                                                    <input type="number" name="female_voters" id="female_voters" class="form-control" value="0" min="0" onchange="calculateTotal()" style="text-align: center; font-size: 28px; font-weight: 800; border: 2px solid #f0d8c8; background: white; border-radius: 16px; padding: 12px;">
                                                 </div>
                                             </div>
                                         </div>
@@ -260,8 +224,8 @@
                                                     <input type="hidden" name="grand_total" id="grand_total" value="0">
                                                     <div style="margin-top: 15px;">
                                                         <div style="display: inline-flex; gap: 30px; background: rgba(255,255,255,0.1); border-radius: 40px; padding: 8px 25px;">
-                                                            <span><i class="fa fa-mars"></i> Miseensa: <strong id="member_total_display">0</strong></span>
-                                                            <span><i class="fa fa-venus"></i> Miseensa Hin Taane: <strong id="nonmember_total_display">0</strong></span>
+                                                            <span><i class="fa fa-mars"></i> Dhiira: <strong id="male_total_display">0</strong></span>
+                                                            <span><i class="fa fa-venus"></i> Dubartii: <strong id="female_total_display">0</strong></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -290,7 +254,7 @@
                             <div class="row" style="margin-top: 10px;">
                                 <div class="col-md-12 text-center">
                                     <button type="submit" class="btn btn-success" style="padding: 14px 45px; font-weight: 700; border-radius: 50px; font-size: 16px; background: linear-gradient(135deg, #2c5f2d, #1e4620); border: none; box-shadow: 0 4px 12px rgba(44,95,45,0.3); transition: all 0.3s;">
-                                        <i class="fa fa-save"></i> Galmee Gabaa
+                                        <i class="fa fa-save"></i> Olkaa'i
                                     </button>
                                     <button type="reset" class="btn btn-outline-secondary" style="padding: 14px 45px; margin-left: 15px; font-weight: 600; border-radius: 50px; font-size: 16px; background: white; border: 2px solid #cbd5e0; color: #4a5568;" onclick="resetForm()">
                                         <i class="fa fa-undo"></i> Irra Deebi'i
@@ -354,33 +318,23 @@
 
 <script>
 function calculateTotal() {
-    // Get member values
-    let memberMale = parseFloat(document.getElementById('member_male').value) || 0;
-    let memberFemale = parseFloat(document.getElementById('member_female').value) || 0;
-    let memberTotal = memberMale + memberFemale;
-    document.getElementById('member_total').value = memberTotal;
-    
-    // Get nonmember values
-    let nonmemberMale = parseFloat(document.getElementById('nonmember_male').value) || 0;
-    let nonmemberFemale = parseFloat(document.getElementById('nonmember_female').value) || 0;
-    let nonmemberTotal = nonmemberMale + nonmemberFemale;
-    document.getElementById('nonmember_total').value = nonmemberTotal;
+    // Get male and female values
+    let maleCount = parseFloat(document.getElementById('male_voters').value) || 0;
+    let femaleCount = parseFloat(document.getElementById('female_voters').value) || 0;
     
     // Calculate grand total
-    let grandTotal = memberTotal + nonmemberTotal;
+    let grandTotal = maleCount + femaleCount;
     document.getElementById('grand_total').value = grandTotal;
     document.getElementById('grand_total_display').innerHTML = grandTotal.toLocaleString();
     
     // Update breakdown displays
-    document.getElementById('member_total_display').innerHTML = memberTotal.toLocaleString();
-    document.getElementById('nonmember_total_display').innerHTML = nonmemberTotal.toLocaleString();
+    document.getElementById('male_total_display').innerHTML = maleCount.toLocaleString();
+    document.getElementById('female_total_display').innerHTML = femaleCount.toLocaleString();
 }
 
 function resetForm() {
-    document.getElementById('member_male').value = 0;
-    document.getElementById('member_female').value = 0;
-    document.getElementById('nonmember_male').value = 0;
-    document.getElementById('nonmember_female').value = 0;
+    document.getElementById('male_voters').value = 0;
+    document.getElementById('female_voters').value = 0;
     document.getElementById('party_name').value = '';
     calculateTotal();
 }
