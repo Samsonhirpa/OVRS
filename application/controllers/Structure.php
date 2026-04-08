@@ -1056,11 +1056,11 @@ public function checkuser() {
         $this->session->set_userdata('naannoofil', $row->naannoofil);
 
         if ($this->session->userdata('role') == 1) {
-            redirect('Structure/dashboard');
+            redirect('VoterTurnout/adminDashboard');
         } elseif ($this->session->userdata('role') == 2) {
-            redirect('Structure/dashboard');
+            redirect('VoterTurnout/adminDashboard');
         } elseif ($this->session->userdata('role') == 3) {
-            redirect('VotingReport/dashboard');
+            redirect('VoterTurnout/dashboard');
         } else {
             redirect('dashboard');
         }

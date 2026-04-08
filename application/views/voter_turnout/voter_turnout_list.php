@@ -1,323 +1,434 @@
-<div class="content-wrapper" style="background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%); min-height: 100vh;">
-    <section class="content-header" style="padding: 25px 30px 0 30px;">
-        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
-            <div>
-                <h1 style="font-size: 28px; margin: 0; font-weight: 700; background: linear-gradient(135deg, #2c5f2d 0%, #1e4620 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;">
-                    <i class="fa fa-list-alt" style="color: #2c5f2d; margin-right: 12px; -webkit-text-fill-color: initial;"></i>
-                    Gabaasawwan Baayyina Filattoota
-                </h1>
-                <p style="margin: 5px 0 0; color: #6c86a3; font-size: 13px;">
-                    <i class="fa fa-flag-checkered"></i> <?php echo $voting_region_name; ?> - Waliigala Gabaasa
-                </p>
+<div class="content-wrapper" style="background: #f0f2f5;">
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --primary-dark: #1e4220;
+            --teal: #1e7e8c;
+            --gold: #e6a017;
+            --red: #b13e3e;
+            --gray-light: #f8f9fc;
+            --border: #e9ecef;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        .dashboard-header h1 {
+            font-size: 22px;
+            margin: 0;
+            font-weight: 600;
+            color: #1e3c2c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.primary::before { background: var(--primary-green); }
+        .stat-card.teal::before { background: var(--teal); }
+        .stat-card.gold::before { background: var(--gold); }
+        .stat-card.red::before { background: var(--red); }
+
+        .stat-icon {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 48px;
+            opacity: 0.08;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            color: #6c757d;
+            margin: 0;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3c2c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .table-modern {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-modern thead th {
+            background: var(--primary-green);
+            color: white;
+            padding: 12px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .table-modern tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .table-modern tbody tr:hover {
+            background: var(--gray-light);
+        }
+
+        .table-modern tbody td {
+            padding: 12px 10px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .badge-modern {
+            background: var(--primary-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-green { background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+        .badge-yellow { background: #ffc107; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+        .badge-red { background: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+
+        .btn-modern {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            text-decoration: none;
+        }
+
+        .btn-primary { background: var(--primary-green); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-teal { background: var(--teal); color: white; }
+        .btn-teal:hover { background: #146b78; }
+
+        .form-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .col-md-3 { flex: 1; min-width: 180px; }
+        .col-md-12 { width: 100%; }
+        .col-xs-6 { flex: 1; min-width: 150px; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide { animation: slideUp 0.4s ease forwards; }
+    </style>
+
+    <div class="dashboard-header animate-slide">
+        <h1>
+            <i class="fa fa-list-alt"></i>
+            Gabaasawwan Baayyina Filattoota
+            <small style="font-size: 13px; color: #6c757d; margin-left: 8px; font-weight: normal;"><?php echo $voting_region_name; ?></small>
+        </h1>
+        <div class="breadcrumb-modern" style="margin-top: 8px;">
+            <a href="<?php echo base_url(); ?>dashboard"><i class="fa fa-dashboard"></i> Manii</a>
+            <span style="margin: 0 5px; color: #999;">›</span>
+            <a href="<?php echo base_url('VoterTurnout/dashboard'); ?>">Daashboordii</a>
+            <span style="margin: 0 5px; color: #999;">›</span>
+            <span style="color: #999;">Gabaasawwan</span>
+        </div>
+    </div>
+
+    <section class="content" style="padding: 0 15px 15px 15px;">
+        
+        <div class="filter-card animate-slide" style="animation-delay: 0.05s;">
+            <form method="get" action="<?php echo base_url('VoterTurnout/listReports'); ?>">
+                <div class="row">
+                    <div class="col-md-3">
+                        <label style="font-weight: 600; font-size: 12px;">Guyyaa Jalqabaa:</label>
+                        <input type="date" name="start_date" class="form-control" value="<?php echo $start_date; ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-weight: 600; font-size: 12px;">Guyyaa Xumuraa:</label>
+                        <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>">
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-weight: 600; font-size: 12px;">Haala Naannoo:</label>
+                        <select name="status_level" class="form-control">
+                            <option value="all" <?php echo $selected_status == 'all' ? 'selected' : ''; ?>>Hunda</option>
+                            <option value="green" <?php echo $selected_status == 'green' ? 'selected' : ''; ?>>Green (Nagaa)</option>
+                            <option value="yellow" <?php echo $selected_status == 'yellow' ? 'selected' : ''; ?>>Yellow (Rakkina xixiqqoo)</option>
+                            <option value="red" <?php echo $selected_status == 'red' ? 'selected' : ''; ?>>Red (Rakkina guddaa)</option>
+                        </select>
+                    </div>
+                    <div class="col-md-3">
+                        <label style="font-weight: 600; font-size: 12px;">&nbsp;</label>
+                        <div>
+                            <button type="submit" class="btn-modern btn-primary"><i class="fa fa-search"></i> Calleessii</button>
+                            <a href="<?php echo base_url('VoterTurnout/listReports'); ?>" class="btn-modern btn-teal"><i class="fa fa-refresh"></i> Haari</a>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+
+        <!-- Summary Stats Cards -->
+        <div class="row animate-slide" style="animation-delay: 0.1s;">
+            <div class="col-md-3">
+                <div class="stat-card primary">
+                    <div class="stat-icon"><i class="fa fa-file-text-o"></i></div>
+                    <div class="stat-value"><?php echo number_format($summary->total_reports ?? 0); ?></div>
+                    <p class="stat-label">Waliigala Gabaasa</p>
+                </div>
             </div>
-            <div>
-                <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn btn-success" style="border-radius: 30px; padding: 10px 25px; background: linear-gradient(135deg, #2c5f2d, #1e4620); border: none; box-shadow: 0 2px 8px rgba(44,95,45,0.3);">
-                    <i class="fa fa-plus-circle"></i> Haaraa Galmeessi
-                </a>
-                <?php if($role == 1): ?>
-                <a href="<?php echo base_url('VoterTurnout/adminDashboard'); ?>" class="btn btn-info" style="border-radius: 30px; padding: 10px 25px; margin-left: 10px; background: linear-gradient(135deg, #17a2b8, #138496); border: none;">
-                    <i class="fa fa-dashboard"></i> Daashboordii Admin
-                </a>
-                <?php endif; ?>
-                <a href="<?php echo base_url(); ?>dashboard" class="btn btn-default" style="border-radius: 30px; padding: 10px 25px; margin-left: 10px; background: white; border: none; box-shadow: 0 2px 8px rgba(0,0,0,0.08);">
-                    <i class="fa fa-dashboard"></i> Daashboordii
-                </a>
+            <div class="col-md-3">
+                <div class="stat-card teal">
+                    <div class="stat-icon"><i class="fa fa-mars"></i></div>
+                    <div class="stat-value"><?php echo number_format($summary->total_male_voters ?? 0); ?></div>
+                    <p class="stat-label">Waliigala Dhiiraa</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card gold">
+                    <div class="stat-icon"><i class="fa fa-venus"></i></div>
+                    <div class="stat-value"><?php echo number_format($summary->total_female_voters ?? 0); ?></div>
+                    <p class="stat-label">Waliigala Dubartii</p>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="stat-card red">
+                    <div class="stat-icon"><i class="fa fa-users"></i></div>
+                    <div class="stat-value"><?php echo number_format($summary->total_voters ?? 0); ?></div>
+                    <p class="stat-label">Waliigala Filattoota</p>
+                </div>
             </div>
         </div>
-    </section>
 
-    <section class="content" style="padding: 20px 30px;">
-        <div class="row">
-            <div class="col-md-12">
-                
-                <!-- Flash Messages -->
-                <?php if($this->session->flashdata('success')): ?>
-                    <div class="alert alert-success alert-dismissible" style="border-radius: 12px; border-left: 4px solid #28a745; background: #e8f5e9; padding: 15px 20px;">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <i class="fa fa-check-circle"></i> <?php echo $this->session->flashdata('success'); ?>
+        <!-- Reports Table -->
+        <div class="modern-card animate-slide" style="animation-delay: 0.15s;">
+            <div class="card-header">
+                <h3><i class="fa fa-list"></i> Gabaasawwan Galmaa'an</h3>
+                <div>
+                    <button class="btn-modern btn-primary" onclick="window.print()"><i class="fa fa-print"></i> Maxxansi</button>
+                    <button class="btn-modern btn-teal" onclick="exportToCSV()"><i class="fa fa-download"></i> CSV</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <?php if(empty($reports)): ?>
+                    <div style="text-align: center; padding: 60px 20px;">
+                        <i class="fa fa-inbox" style="font-size: 64px; color: #cbd5e0;"></i>
+                        <p style="margin-top: 15px; color: #718096;">Gabaasi baayyina filattoota hin jiru!</p>
+                        <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn-modern btn-primary" style="margin-top: 10px;">
+                            <i class="fa fa-plus-circle"></i> Haaraa Galmeessi
+                        </a>
                     </div>
-                <?php endif; ?>
-
-                <?php if($this->session->flashdata('error')): ?>
-                    <div class="alert alert-danger alert-dismissible" style="border-radius: 12px; border-left: 4px solid #dc3545; background: #ffebee; padding: 15px 20px;">
-                        <button type="button" class="close" data-dismiss="alert">&times;</button>
-                        <i class="fa fa-exclamation-circle"></i> <?php echo $this->session->flashdata('error'); ?>
-                    </div>
-                <?php endif; ?>
-                
-                <!-- Filter Card -->
-                <div style="background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); margin-bottom: 25px; overflow: hidden;">
-                    <div style="background: #f8fafc; padding: 15px 25px; border-bottom: 1px solid #e2e8f0;">
-                        <h5 style="margin: 0; font-weight: 600; color: #2c5f2d;">
-                            <i class="fa fa-filter"></i> Calleessii Gabaasa
-                        </h5>
-                    </div>
-                    <div style="padding: 20px 25px;">
-                        <form method="get" action="<?php echo base_url('VoterTurnout/listReports'); ?>">
-                            <div class="row">
-                                <div class="col-md-3">
-                                    <div class="form-group" style="width: 100%;">
-                                        <label style="font-weight: 600; color: #555; margin-bottom: 5px;">Guyyaa Jalqabaa:</label>
-                                        <input type="date" name="start_date" class="form-control" value="<?php echo $start_date; ?>" style="border-radius: 10px; width: 100%; height: 40px;">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group" style="width: 100%;">
-                                        <label style="font-weight: 600; color: #555; margin-bottom: 5px;">Guyyaa Xumuraa:</label>
-                                        <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>" style="border-radius: 10px; width: 100%; height: 40px;">
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group" style="width: 100%;">
-                                        <label style="font-weight: 600; color: #555; margin-bottom: 5px;">Haala Naannoo:</label>
-                                        <select name="status_level" class="form-control" style="border-radius: 10px; width: 100%; height: 40px;">
-                                            <option value="all" <?php echo $selected_status == 'all' ? 'selected' : ''; ?>>Hunda</option>
-                                            <option value="green" <?php echo $selected_status == 'green' ? 'selected' : ''; ?>>Green (Nagaa)</option>
-                                            <option value="yellow" <?php echo $selected_status == 'yellow' ? 'selected' : ''; ?>>Yellow (Rakkina xixiqqoo)</option>
-                                            <option value="red" <?php echo $selected_status == 'red' ? 'selected' : ''; ?>>Red (Rakkina guddaa)</option>
-                                        </select>
-                                    </div>
-                                </div>
-                                <div class="col-md-3">
-                                    <div class="form-group" style="width: 100%; margin-top: 22px;">
-                                        <button type="submit" class="btn btn-primary" style="background: #2c5f2d; border: none; border-radius: 10px; padding: 8px 20px;">
-                                            <i class="fa fa-search"></i> Calleessii
-                                        </button>
-                                        <a href="<?php echo base_url('VoterTurnout/listReports'); ?>" class="btn btn-default" style="border-radius: 10px; padding: 8px 20px; margin-left: 8px; background: #f0f0f0; border: none;">
-                                            <i class="fa fa-refresh"></i> Haari
+                <?php else: ?>
+                    <table class="table-modern" id="reportsTable">
+                        <thead>
+                            <tr>
+                                <th style="width: 5%; text-align: center;">#</th>
+                                <th style="width: 12%;">Guyyaa</th>
+                                <th style="width: 10%; text-align: center;">Yeroo</th>
+                                <th style="width: 10%; text-align: center;">Lakk.Tarree</th>
+                                <th style="width: 10%; text-align: center;">Dhiirii</th>
+                                <th style="width: 10%; text-align: center;">Dubartii</th>
+                                <th style="width: 10%; text-align: center;">Waliigala</th>
+                                <th style="width: 15%; text-align: center;">Haala Naannoo</th>
+                                <th style="width: 8%; text-align: center;">Gocha</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <?php $counter = 1; foreach($reports as $report): 
+                                if($report->status_level == 'green') {
+                                    $statusClass = 'badge-green';
+                                    $statusIcon = 'fa-check-circle';
+                                } elseif($report->status_level == 'yellow') {
+                                    $statusClass = 'badge-yellow';
+                                    $statusIcon = 'fa-warning';
+                                } else {
+                                    $statusClass = 'badge-red';
+                                    $statusIcon = 'fa-exclamation-triangle';
+                                }
+                                $reportTime = strtotime($report->created_at);
+                                $can_edit = ((time() - $reportTime) / 3600) <= 1;
+                            ?>
+                            <tr>
+                                <td class="text-center"><?php echo $counter++; ?></td>
+                                <td><?php echo date('d/m/Y', strtotime($report->report_date)); ?></td>
+                                <td class="text-center"><?php echo date('H:i', strtotime($report->report_time)); ?> <small>(<?php echo $report->report_session; ?>)</small></td>
+                                <td class="text-center">#<?php echo str_pad($report->serial_number, 4, '0', STR_PAD_LEFT); ?></td>
+                                <td class="text-center"><strong style="color: #2c5f2d;"><?php echo number_format($report->male_voters); ?></strong></td>
+                                <td class="text-center"><strong style="color: #e6a017;"><?php echo number_format($report->female_voters); ?></strong></td>
+                                <td class="text-center"><span class="badge-modern"><?php echo number_format($report->total_voters); ?></span></td>
+                                <td class="text-center">
+                                    <span class="<?php echo $statusClass; ?>">
+                                        <i class="fa <?php echo $statusIcon; ?>"></i> <?php echo strtoupper($report->status_level); ?>
+                                    </span>
+                                    <?php if($report->status_reason): ?>
+                                        <br><small style="color: #999;" title="<?php echo htmlspecialchars($report->status_reason); ?>">
+                                            <?php echo substr($report->status_reason, 0, 30); ?>
+                                        </small>
+                                    <?php endif; ?>
+                                </td>
+                                <td class="text-center">
+                                    <div style="display: flex; gap: 5px; justify-content: center;">
+                                        <a href="<?php echo base_url('VoterTurnout/viewReport/'.$report->id); ?>" class="btn btn-sm" style="background: #17a2b8; color: white; border-radius: 6px; padding: 5px 10px;" title="Ilaalchuu">
+                                            <i class="fa fa-eye"></i>
                                         </a>
+                                        <?php if($can_edit): ?>
+                                            <a href="<?php echo base_url('VoterTurnout/editReport/'.$report->id); ?>" class="btn btn-sm" style="background: #e6a017; color: white; border-radius: 6px; padding: 5px 10px;" title="Fooyyessuu">
+                                                <i class="fa fa-edit"></i>
+                                            </a>
+                                            <a href="<?php echo base_url('VoterTurnout/deleteReport/'.$report->id); ?>" class="btn btn-sm" style="background: #dc3545; color: white; border-radius: 6px; padding: 5px 10px;" onclick="return confirm('Gabaasa kana haquu barbaaddaa?')" title="Haquu">
+                                                <i class="fa fa-trash"></i>
+                                            </a>
+                                        <?php endif; ?>
                                     </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-                
-                <!-- Summary Stats Cards -->
-                <div class="row" style="margin-bottom: 25px;">
-                    <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); border-radius: 16px; padding: 20px; color: white;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">WALIIGALA GABAASA</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_reports ?? 0); ?></h2>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-file-text" style="font-size: 24px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #2c5f2d 0%, #3e8e41 100%); border-radius: 16px; padding: 20px; color: white;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">DHIIRA (MALE)</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_male_voters ?? 0); ?></h2>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-mars" style="font-size: 24px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #e67e22 0%, #f39c12 100%); border-radius: 16px; padding: 20px; color: white;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <p style="margin: 0; opacity: 0.8; font-size: 12px;">DUBARTII (FEMALE)</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_female_voters ?? 0); ?></h2>
-                                </div>
-                                <div style="background: rgba(255,255,255,0.2); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-venus" style="font-size: 24px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-3">
-                        <div style="background: linear-gradient(135deg, #fa709a 0%, #fee140 100%); border-radius: 16px; padding: 20px; color: #333;">
-                            <div style="display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <p style="margin: 0; opacity: 0.7; font-size: 12px;">WALIIGALA FILATTOOTA</p>
-                                    <h2 style="margin: 5px 0; font-size: 32px; font-weight: 700;"><?php echo number_format($summary->total_voters ?? 0); ?></h2>
-                                </div>
-                                <div style="background: rgba(0,0,0,0.1); border-radius: 12px; width: 50px; height: 50px; display: flex; align-items: center; justify-content: center;">
-                                    <i class="fa fa-check-circle" style="font-size: 24px;"></i>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Status Summary Row -->
-                <div class="row" style="margin-bottom: 25px;">
-                    <div class="col-md-4">
-                        <div style="background: #e8f5e9; border-radius: 16px; padding: 15px; text-align: center; border-left: 4px solid #28a745;">
-                            <i class="fa fa-check-circle" style="color: #28a745; font-size: 24px;"></i>
-                            <h4 style="margin: 5px 0; color: #28a745;">Green (Nagaa)</h4>
-                            <h2 style="margin: 0; font-size: 28px;"><?php echo number_format($summary->green_count ?? 0); ?></h2>
-                            <small>Gabaasa</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div style="background: #fff3e0; border-radius: 16px; padding: 15px; text-align: center; border-left: 4px solid #ffc107;">
-                            <i class="fa fa-warning" style="color: #ffc107; font-size: 24px;"></i>
-                            <h4 style="margin: 5px 0; color: #ffc107;">Yellow (Rakkina xixiqqoo)</h4>
-                            <h2 style="margin: 0; font-size: 28px;"><?php echo number_format($summary->yellow_count ?? 0); ?></h2>
-                            <small>Gabaasa</small>
-                        </div>
-                    </div>
-                    <div class="col-md-4">
-                        <div style="background: #ffebee; border-radius: 16px; padding: 15px; text-align: center; border-left: 4px solid #dc3545;">
-                            <i class="fa fa-exclamation-triangle" style="color: #dc3545; font-size: 24px;"></i>
-                            <h4 style="margin: 5px 0; color: #dc3545;">Red (Rakkina guddaa)</h4>
-                            <h2 style="margin: 0; font-size: 28px;"><?php echo number_format($summary->red_count ?? 0); ?></h2>
-                            <small>Gabaasa</small>
-                        </div>
-                    </div>
-                </div>
-                
-                <!-- Reports Table Card -->
-                <div style="background: white; border-radius: 20px; box-shadow: 0 4px 12px rgba(0,0,0,0.04); overflow: hidden;">
-                    <div style="background: linear-gradient(135deg, #2c5f2d, #1e4620); padding: 18px 25px;">
-                        <h4 style="margin: 0; color: white; font-weight: 600;">
-                            <i class="fa fa-list"></i> Gabaasawwan Galmaa'an
-                        </h4>
-                    </div>
-                    
-                    <div style="padding: 0; overflow-x: auto;">
-                        <?php if(empty($reports)): ?>
-                            <div style="text-align: center; padding: 60px 20px;">
-                                <i class="fa fa-inbox" style="font-size: 64px; color: #cbd5e0;"></i>
-                                <p style="margin-top: 15px; color: #718096;">Gabaasi baayyina filattoota hin jiru!</p>
-                                <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn btn-success" style="border-radius: 30px; margin-top: 10px;">
-                                    <i class="fa fa-plus-circle"></i> Gabaasa Haaraa Galmeessi
-                                </a>
-                            </div>
-                        <?php else: ?>
-                            <table class="table" style="margin-bottom: 0; width: 100%; border-collapse: collapse;">
-                                <thead>
-                                    <tr style="background: #f8fafc; border-bottom: 2px solid #e2e8f0;">
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">#</th>
-                                        <?php if($role == 1): ?>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d;">Naannoo</th>
-                                        <?php endif; ?>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d;">Guyyaa & Yeroo</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Dhiira</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Dubartii</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Waliigala</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Haala Naannoo</th>
-                                        <th style="padding: 15px 12px; font-weight: 700; color: #2c5f2d; text-align: center;">Gocha</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <?php 
-                                    $i = 1; 
-                                    $currentTime = time();
-                                    foreach($reports as $report): 
-                                        $reportTime = strtotime($report->created_at);
-                                        $timeDiff = ($currentTime - $reportTime) / 3600;
-                                        $can_edit = ($timeDiff <= 1);
-                                        
-                                        // Status badge styling
-                                        $statusClass = '';
-                                        $statusIcon = '';
-                                        if($report->status_level == 'green') {
-                                            $statusClass = 'background: #e8f5e9; color: #28a745;';
-                                            $statusIcon = 'fa-check-circle';
-                                        } elseif($report->status_level == 'yellow') {
-                                            $statusClass = 'background: #fff3e0; color: #ffc107;';
-                                            $statusIcon = 'fa-warning';
-                                        } else {
-                                            $statusClass = 'background: #ffebee; color: #dc3545;';
-                                            $statusIcon = 'fa-exclamation-triangle';
-                                        }
-                                    ?>
-                                    <tr style="border-bottom: 1px solid #edf2f7; transition: background 0.2s;" onmouseover="this.style.background='#f8fafc'" onmouseout="this.style.background='white'">
-                                        <td style="padding: 12px; text-align: center; font-weight: 600;"><?php echo $i++; ?></td>
-                                        <?php if($role == 1): ?>
-                                        <td style="padding: 12px;">
-                                            <strong><?php echo $report->naannoofil_id; ?></strong>
-                                        </td>
-                                        <?php endif; ?>
-                                        <td style="padding: 12px;">
-                                            <strong><?php echo date('d/m/Y', strtotime($report->report_date)); ?></strong><br>
-                                            <small style="color: #718096;"><i class="fa fa-clock-o"></i> <?php echo date('H:i', strtotime($report->created_at)); ?></small>
-                                        </td>
-                                        <td style="padding: 12px; text-align: center;">
-                                            <strong style="color: #2c5f2d;"><?php echo number_format($report->male_voters); ?></strong>
-                                        </td>
-                                        <td style="padding: 12px; text-align: center;">
-                                            <strong style="color: #e67e22;"><?php echo number_format($report->female_voters); ?></strong>
-                                        </td>
-                                        <td style="padding: 12px; text-align: center;">
-                                            <span style="background: #e8f5e9; padding: 5px 12px; border-radius: 12px; font-weight: 700; color: #2c5f2d;">
-                                                <?php echo number_format($report->total_voters); ?>
-                                            </span>
-                                        </td>
-                                        <td style="padding: 12px; text-align: center;">
-                                            <span style="padding: 5px 12px; border-radius: 20px; font-size: 11px; font-weight: 600; <?php echo $statusClass; ?>">
-                                                <i class="fa <?php echo $statusIcon; ?>"></i> 
-                                                <?php echo strtoupper($report->status_level); ?>
-                                            </span>
-                                            <?php if($report->status_reason): ?>
-                                                <br><small style="color: #718096;"><?php echo substr($report->status_reason, 0, 50); ?></small>
-                                            <?php endif; ?>
-                                        </td>
-                                        <td style="padding: 12px; text-align: center;">
-                                            <div style="display: flex; gap: 5px; justify-content: center;">
-                                                <a href="<?php echo base_url('VoterTurnout/viewReport/'.$report->id); ?>" class="btn btn-sm" style="background: #17a2b8; color: white; border-radius: 8px; padding: 6px 12px;" title="Ilaalchuu">
-                                                    <i class="fa fa-eye"></i>
-                                                </a>
-                                                <?php if($can_edit): ?>
-                                                    <a href="<?php echo base_url('VoterTurnout/editReport/'.$report->id); ?>" class="btn btn-sm" style="background: #e67e22; color: white; border-radius: 8px; padding: 6px 12px;" title="Fooyyessuu">
-                                                        <i class="fa fa-edit"></i>
-                                                    </a>
-                                                    <a href="<?php echo base_url('VoterTurnout/deleteReport/'.$report->id); ?>" class="btn btn-sm" style="background: #dc3545; color: white; border-radius: 8px; padding: 6px 12px;" onclick="return confirm('Gabaasa kana haquu barbaaddaa?')" title="Haquu">
-                                                        <i class="fa fa-trash"></i>
-                                                    </a>
-                                                <?php else: ?>
-                                                    <button class="btn btn-sm" style="background: #e0e0e0; color: #999; border-radius: 8px; padding: 6px 12px;" disabled>
-                                                        <i class="fa fa-edit"></i>
-                                                    </button>
-                                                    <button class="btn btn-sm" style="background: #e0e0e0; color: #999; border-radius: 8px; padding: 6px 12px;" disabled>
-                                                        <i class="fa fa-trash"></i>
-                                                    </button>
-                                                <?php endif; ?>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                    <?php endforeach; ?>
-                                </tbody>
-                             </table>
-                        <?php endif; ?>
-                    </div>
-                </div>
-                
-                <!-- Info Note -->
-                <div style="margin-top: 20px; background: #e3f2fd; border-radius: 12px; padding: 12px 20px; border-left: 4px solid #17a2b8;">
-                    <i class="fa fa-info-circle" style="color: #17a2b8;"></i>
-                    <span style="font-size: 12px; color: #0c5460;">
-                        <strong>Hubachiisa:</strong> Gabaasni sa'aatii 1 keessatti qofaa fooyyessuu fi haquu danda'ama. Yeroo darbee booda ilaaluu qofa dandeessu.
-                    </span>
-                </div>
+                                </td>
+                            </tr>
+                            <?php endforeach; ?>
+                        </tbody>
+                        <tfoot>
+                            <tr style="background: #f8f9fc; font-weight: 700;">
+                                <td colspan="4" class="text-right"><strong>WALIIGALA:</strong></td>
+                                <td class="text-center"><strong><?php echo number_format($summary->total_male_voters ?? 0); ?></strong></td>
+                                <td class="text-center"><strong><?php echo number_format($summary->total_female_voters ?? 0); ?></strong></td>
+                                <td class="text-center"><strong><?php echo number_format($summary->total_voters ?? 0); ?></strong></td>
+                                <td colspan="2"></td>
+                            </tr>
+                        </tfoot>
+                    </table>
+                <?php endif; ?>
             </div>
         </div>
+        
+        <div class="row animate-slide" style="animation-delay: 0.2s; margin-bottom: 30px;">
+            <div class="col-md-12 text-right">
+                <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn-modern btn-primary">
+                    <i class="fa fa-plus-circle"></i> Gabaasa Haaraa Galmeessi
+                </a>
+                <a href="<?php echo base_url('VoterTurnout/dashboard'); ?>" class="btn-modern btn-teal" style="margin-left: 10px;">
+                    <i class="fa fa-dashboard"></i> Daashboordiitti Deebi'i
+                </a>
+            </div>
+        </div>
+        
     </section>
 </div>
 
-<style>
-    .table th, .table td {
-        vertical-align: middle;
+<script>
+    function exportToCSV() {
+        var rows = [];
+        rows.push(['#', 'Guyyaa', 'Yeroo', 'Lakk.Tarree', 'Dhiirii', 'Dubartii', 'Waliigala', 'Haala Naannoo', 'Sababa']);
+        
+        <?php if(!empty($reports)): ?>
+            <?php $exportCounter = 1; foreach($reports as $report): ?>
+                rows.push([
+                    <?php echo $exportCounter++; ?>,
+                    '<?php echo date('Y-m-d', strtotime($report->report_date)); ?>',
+                    '<?php echo $report->report_time . ' (' . $report->report_session . ')'; ?>',
+                    '#<?php echo str_pad($report->serial_number, 4, '0', STR_PAD_LEFT); ?>',
+                    <?php echo $report->male_voters; ?>,
+                    <?php echo $report->female_voters; ?>,
+                    <?php echo $report->total_voters; ?>,
+                    '<?php echo strtoupper($report->status_level); ?>',
+                    '<?php echo addslashes($report->status_reason); ?>'
+                ]);
+            <?php endforeach; ?>
+        <?php endif; ?>
+        
+        var csvContent = rows.map(row => row.join(',')).join('\n');
+        var blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+        var link = document.createElement('a');
+        var url = URL.createObjectURL(blob);
+        link.href = url;
+        link.setAttribute('download', 'gabaasawwan_baayyina_filattoota_' + new Date().toISOString().slice(0,19) + '.csv');
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+        URL.revokeObjectURL(url);
     }
-    .btn-sm {
-        transition: all 0.2s ease;
-    }
-    .btn-sm:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15);
-    }
-    .table tbody tr {
-        transition: background 0.2s ease;
-    }
-</style>
+</script>

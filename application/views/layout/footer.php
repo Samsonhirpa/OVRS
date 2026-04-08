@@ -1,10 +1,12 @@
+<!-- ===================== FOOTER (modern, dynamic margin) ===================== -->
 <footer class="main-footer">
-    <div class="pull-right hidden-xs">
-      <b><a>Dev by OSTA </a></b> 
+    <div>
+        <strong>Copyright &copy; 2026 <a href="#">OSTA</a>.</strong> All rights reserved.
     </div>
-    <strong>Copyright &copy; 2026 <a href="#">OSTA</a>.</strong> All rights
-    reserved.
-  </footer>
+    <div class="pull-right hidden-xs">
+        <b>Dev by <a href="#">OSTA Team</a></b>
+    </div>
+</footer>
 
 
 <!-- jQuery 3 -->

@@ -1,4 +1,185 @@
-<div class="content-wrapper" style="background: linear-gradient(135deg, #f5f7fc 0%, #eef2f8 100%); min-height: 100vh;">
+<div class="content-wrapper" style="background: #f0f2f5;">
+    <style>
+        :root {
+            --primary-green: #2c5f2d;
+            --primary-dark: #1e4220;
+            --teal: #1e7e8c;
+            --gold: #e6a017;
+            --red: #b13e3e;
+            --gray-light: #f8f9fc;
+            --border: #e9ecef;
+            --shadow-sm: 0 2px 4px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 12px rgba(0,0,0,0.06);
+        }
+
+        .dashboard-header {
+            background: white;
+            padding: 20px 25px;
+            margin-bottom: 20px;
+            border-radius: 12px;
+            box-shadow: var(--shadow-sm);
+            border-bottom: 3px solid var(--primary-green);
+        }
+
+        .dashboard-header h1 {
+            font-size: 22px;
+            margin: 0;
+            font-weight: 600;
+            color: #1e3c2c;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 16px;
+            padding: 18px 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 4px;
+        }
+
+        .stat-card.primary::before { background: var(--primary-green); }
+        .stat-card.teal::before { background: var(--teal); }
+        .stat-card.gold::before { background: var(--gold); }
+        .stat-card.red::before { background: var(--red); }
+
+        .stat-icon {
+            position: absolute;
+            right: 15px;
+            top: 15px;
+            font-size: 48px;
+            opacity: 0.08;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            margin: 5px 0;
+            color: #333;
+        }
+
+        .filter-card {
+            background: white;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .modern-card {
+            background: white;
+            border-radius: 16px;
+            box-shadow: var(--shadow-sm);
+            margin-bottom: 25px;
+            overflow: hidden;
+        }
+
+        .card-header {
+            padding: 15px 20px;
+            background: white;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .card-header h3 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: 700;
+            color: #1e3c2c;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .card-body {
+            padding: 20px;
+            overflow-x: auto;
+        }
+
+        .table-modern {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table-modern thead th {
+            background: var(--primary-green);
+            color: white;
+            padding: 12px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .table-modern tbody tr {
+            border-bottom: 1px solid var(--border);
+            transition: background 0.2s ease;
+        }
+
+        .table-modern tbody tr:hover {
+            background: var(--gray-light);
+        }
+
+        .table-modern tbody td {
+            padding: 12px 10px;
+            font-size: 13px;
+            vertical-align: middle;
+        }
+
+        .badge-modern {
+            background: var(--primary-green);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 600;
+        }
+
+        .badge-green { background: #28a745; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+        .badge-yellow { background: #ffc107; color: #333; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+        .badge-red { background: #dc3545; color: white; padding: 4px 10px; border-radius: 20px; font-size: 11px; }
+
+        .btn-modern {
+            border-radius: 30px;
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 500;
+            border: none;
+            transition: all 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+        }
+
+        .btn-primary { background: var(--primary-green); color: white; }
+        .btn-primary:hover { background: var(--primary-dark); }
+        .btn-teal { background: var(--teal); color: white; }
+        .btn-teal:hover { background: #146b78; }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .animate-slide { animation: slideUp 0.4s ease forwards; }
+    </style>
     <section class="content-header" style="padding: 25px 30px 0 30px;">
         <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
             <div>

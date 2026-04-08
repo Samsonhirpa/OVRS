@@ -34,14 +34,11 @@ class VoterTurnout extends CI_Controller {
      * Display the registration form
      */
     public function register() {
-        // Check if user is logged in
         if($this->session->userdata('username')) {
             
-            // Clear flashdata
             $this->session->set_flashdata('success', null);
             $this->session->set_flashdata('error', null);
             
-            // Get user information from session
             $userId = $this->session->userdata('id');
             if(!$userId) {
                 $userId = $this->session->userdata('userId');
@@ -52,24 +49,17 @@ class VoterTurnout extends CI_Controller {
                 $userName = $this->session->userdata('name');
             }
             
-            // Get naannoofil from session
             $votingRegionCode = $this->session->userdata('naannoofil');
             
-            // If voting region not found in session, show error and redirect
             if(!$votingRegionCode) {
                 $this->session->set_flashdata('error', 'Ati naannoo filannoo hin qabdu! Maalawiitti naannoo filannoo qindeessi.');
                 redirect('dashboard');
             }
             
-            // Get today's date
             $today = date('Y-m-d');
             $currentTime = date('H:i:s');
-            
-            // Determine session (morning or afternoon)
             $currentHour = date('H');
             $reportSession = ($currentHour < 12) ? 'morning' : 'afternoon';
-            
-            // Get next serial number
             $serialNumber = $this->VoterTurnout_model->getNextSerialNumber($votingRegionCode, $today);
             
             $data = array(
@@ -90,7 +80,6 @@ class VoterTurnout extends CI_Controller {
                 'activeMenu' => 'voterTurnoutRegister'
             );
             
-            // Load layout with view
             $this->load->view('layout/header');
             $this->load->view('layout/topmenu');
             $this->load->view('layout/sidemenu', $data);
@@ -106,17 +95,14 @@ class VoterTurnout extends CI_Controller {
      * Save the voter turnout report
      */
     public function save() {
-        // Check if it's POST request
         if(!$this->input->post()) {
             redirect('VoterTurnout/register');
         }
         
-        // Get user ID from the submitted form data
         $userId = $this->input->post('reporter_id');
         $votingRegionCode = $this->input->post('naannoofil_id');
         $reporterName = $this->input->post('reporter_name');
         
-        // Validate required fields
         $this->form_validation->set_rules('status_level', 'Haala Naannoo', 'required');
         
         if ($this->form_validation->run() == FALSE) {
@@ -124,13 +110,11 @@ class VoterTurnout extends CI_Controller {
             redirect('VoterTurnout/register');
         }
         
-        // Check if we have all the necessary data
         if(!$votingRegionCode) {
             $this->session->set_flashdata('error', 'Odeeffannoo naannoo filannoo hin argamne!');
             redirect('VoterTurnout/register');
         }
         
-        // Get form data
         $reportDate = $this->input->post('report_date');
         $reportSession = $this->input->post('report_session');
         $reportTime = $this->input->post('report_time');
@@ -139,12 +123,10 @@ class VoterTurnout extends CI_Controller {
         $statusReason = $this->input->post('status_reason');
         $remarks = $this->input->post('remarks');
         
-        // Get male and female voters
         $maleVoters = (int)($this->input->post('male_voters') ?: 0);
         $femaleVoters = (int)($this->input->post('female_voters') ?: 0);
         $totalVoters = $maleVoters + $femaleVoters;
         
-        // Prepare data array
         $data = array(
             'naannoofil_id' => $votingRegionCode,
             'report_date' => $reportDate,
@@ -164,7 +146,6 @@ class VoterTurnout extends CI_Controller {
             'status' => 1
         );
         
-        // Save to database
         $result = $this->VoterTurnout_model->saveReport($data);
         
         if($result) {
@@ -187,14 +168,12 @@ class VoterTurnout extends CI_Controller {
             $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
             $votingRegionName = $votingRegionCode;
             
-            // Get filter parameters
             $startDate = $this->input->get('start_date') ?: date('Y-m-d', strtotime('-30 days'));
             $endDate = $this->input->get('end_date') ?: date('Y-m-d');
             $statusLevel = $this->input->get('status_level') ?: 'all';
             
-            // Get reports for this specific region
-            $reports = $this->VoterTurnout_model->getReportsWithLocation($votingRegionCode, $startDate, $endDate, $statusLevel);
-            $summary = $this->VoterTurnout_model->getRegionSummary($votingRegionCode, $startDate, $endDate);
+            $reports = $this->VoterTurnout_model->getRegionReports($votingRegionCode, $startDate, $endDate, $statusLevel);
+            $summary = $this->VoterTurnout_model->getRegionTotalSummary($votingRegionCode, $startDate, $endDate);
             
             $data = array(
                 'pageTitle' => 'Gabaasawwan Baayyina Filattoota',
@@ -232,22 +211,18 @@ class VoterTurnout extends CI_Controller {
             $role = $this->session->userdata('role');
             $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
             
-            // Get report
             $report = $this->VoterTurnout_model->getReportById($id);
             
-            // Check if report exists
             if(!$report) {
                 $this->session->set_flashdata('error', 'Gabaasni hin argamne!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // For non-admin, check if report belongs to their region
             if($role != 1 && $report->naannoofil_id != $votingRegionCode) {
                 $this->session->set_flashdata('error', 'Gabaasa kana ilaaluu hin dandeessu!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // Check if within 1 hour for editing
             $reportTime = strtotime($report->created_at);
             $currentTime = time();
             $timeDiff = ($currentTime - $reportTime) / 3600;
@@ -285,22 +260,18 @@ class VoterTurnout extends CI_Controller {
             $role = $this->session->userdata('role');
             $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
             
-            // Get report
             $report = $this->VoterTurnout_model->getReportById($id);
             
-            // Check if report exists
             if(!$report) {
                 $this->session->set_flashdata('error', 'Gabaasni hin argamne!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // For non-admin, check if report belongs to their region
             if($role != 1 && $report->naannoofil_id != $votingRegionCode) {
                 $this->session->set_flashdata('error', 'Gabaasa kana fooyyessuu hin dandeessu!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // Check if within 1 hour for editing
             $reportTime = strtotime($report->created_at);
             $currentTime = time();
             $timeDiff = ($currentTime - $reportTime) / 3600;
@@ -342,22 +313,18 @@ class VoterTurnout extends CI_Controller {
             $role = $this->session->userdata('role');
             $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
             
-            // Get report
             $report = $this->VoterTurnout_model->getReportById($id);
             
-            // Check if report exists
             if(!$report) {
                 $this->session->set_flashdata('error', 'Gabaasni hin argamne!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // For non-admin, check if report belongs to their region
             if($role != 1 && $report->naannoofil_id != $votingRegionCode) {
                 $this->session->set_flashdata('error', 'Gabaasa kana fooyyessuu hin dandeessu!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // Check if within 1 hour for editing
             $reportTime = strtotime($report->created_at);
             $currentTime = time();
             $timeDiff = ($currentTime - $reportTime) / 3600;
@@ -367,12 +334,10 @@ class VoterTurnout extends CI_Controller {
                 redirect('VoterTurnout/listReports');
             }
             
-            // Get male and female voters
             $maleVoters = (int)($this->input->post('male_voters') ?: 0);
             $femaleVoters = (int)($this->input->post('female_voters') ?: 0);
             $totalVoters = $maleVoters + $femaleVoters;
             
-            // Prepare update data
             $updateData = array(
                 'male_voters' => $maleVoters,
                 'female_voters' => $femaleVoters,
@@ -407,7 +372,6 @@ class VoterTurnout extends CI_Controller {
             $role = $this->session->userdata('role');
             $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
             
-            // Get report
             $report = $this->VoterTurnout_model->getReportById($id);
             
             if(!$report) {
@@ -415,13 +379,11 @@ class VoterTurnout extends CI_Controller {
                 redirect('VoterTurnout/listReports');
             }
             
-            // For non-admin, check if report belongs to their region
             if($role != 1 && $report->naannoofil_id != $votingRegionCode) {
                 $this->session->set_flashdata('error', 'Gabaasa kana haquu hin dandeessu!');
                 redirect('VoterTurnout/listReports');
             }
             
-            // Check if within 1 hour
             $reportTime = strtotime($report->created_at);
             $currentTime = time();
             $timeDiff = ($currentTime - $reportTime) / 3600;
@@ -446,76 +408,144 @@ class VoterTurnout extends CI_Controller {
     }
     
     /**
-     * Dashboard for voter turnout (Admin) - Complete admin dashboard
+     * Dashboard for Naannoo Filannoo user
      */
-    public function adminDashboard() {
+    public function dashboard() {
         if($this->session->userdata('username')) {
             
-            // Check if user is admin
-            if($this->session->userdata('role') != 1) {
-                $this->session->set_flashdata('error', 'Daashboordii kana ilaaluuf admin qofa!');
+            $userName = $this->session->userdata('full_name');
+            $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
+            $votingRegionName = $votingRegionCode;
+            
+            if(!$votingRegionCode) {
+                $this->session->set_flashdata('error', 'Ati naannoo filannoo hin qabdu!');
                 redirect('dashboard');
             }
             
-            $userName = $this->session->userdata('full_name');
-            
-            // Get filter parameters
             $startDate = $this->input->get('start_date') ?: date('Y-m-d', strtotime('-30 days'));
             $endDate = $this->input->get('end_date') ?: date('Y-m-d');
-            $statusLevel = $this->input->get('status_level') ?: 'all';
-            $selectedRegion = $this->input->get('region') ?: 'all';
             
-            // Get dashboard statistics
-            $stats = $this->VoterTurnout_model->getDashboardStats($startDate, $endDate);
+            // Get dashboard summary with LAST security status
+            $summary = $this->VoterTurnout_model->getRegionDashboardSummary($votingRegionCode, $startDate, $endDate);
             
-            // Get all regions with totals
-            $regionReports = $this->VoterTurnout_model->getAllRegionsWithTotals($startDate, $endDate, $statusLevel);
+            // Get weekly data for chart
+            $weekData = $this->VoterTurnout_model->getWeeklyData($votingRegionCode);
             
-            // Get all reports for the table
-            $reports = $this->VoterTurnout_model->getAllReports($startDate, $endDate, $statusLevel, $selectedRegion);
-            
-            // Get status breakdown by region
-            $statusByRegion = $this->VoterTurnout_model->getStatusByRegion($startDate, $endDate);
-            
-            // Get list of all regions for filter
-            $allRegions = $this->VoterTurnout_model->getAllRegions();
+            // Get recent reports (last 5)
+            $this->db->select('*');
+            $this->db->from('voter_turnout');
+            $this->db->where('naannoofil_id', $votingRegionCode);
+            $this->db->where('status', 1);
+            $this->db->order_by('created_at', 'DESC');
+            $this->db->limit(5);
+            $recentReports = $this->db->get()->result();
             
             $data = array(
-                'pageTitle' => 'Daashboordii Baayyina Filattoota - Admin',
+                'pageTitle' => 'Daashboordii Baayyina Filattoota',
                 'name' => $userName,
                 'role' => $this->session->userdata('role'),
                 'role_text' => $this->getRoleText($this->session->userdata('role')),
                 'profile_image' => $this->session->userdata('profile_image'),
                 'last_login' => $this->session->userdata('last_login'),
-                'stats' => $stats,
-                'region_reports' => $regionReports,
-                'reports' => $reports,
-                'status_by_region' => $statusByRegion,
-                'all_regions' => $allRegions,
+                'voting_region_code' => $votingRegionCode,
+                'voting_region_name' => $votingRegionName,
+                'summary' => $summary,
+                'recent_reports' => $recentReports,
                 'start_date' => $startDate,
                 'end_date' => $endDate,
-                'selected_status' => $statusLevel,
-                'selected_region' => $selectedRegion,
-                'activeMenu' => 'voterTurnoutAdminDashboard'
+                'week_labels' => json_encode($weekData['labels']),
+                'week_data' => json_encode($weekData['data']),
+                'activeMenu' => 'voterTurnoutDashboard'
             );
             
             $this->load->view('layout/header');
             $this->load->view('layout/topmenu');
             $this->load->view('layout/sidemenu', $data);
-            $this->load->view('voter_turnout/voter_turnout_admin_dashboard', $data);
+            $this->load->view('voter_turnout/voter_turnout_dashboard', $data);
             $this->load->view('layout/footer');
         } else {
             redirect('Structure/login');
         }
     }
     
+public function adminDashboard() {
+    if(!$this->session->userdata('username')) redirect('Structure/login');
+    if($this->session->userdata('role') != 1) {
+        $this->session->set_flashdata('error', 'Daashboordii kana ilaaluuf admin qofa!');
+        redirect('dashboard');
+    }
+    
+    $startDate = $this->input->get('start_date') ?: date('Y-m-d', strtotime('-30 days'));
+    $endDate   = $this->input->get('end_date') ?: date('Y-m-d');
+    $zone      = $this->input->get('zone') ?: 'all';
+    $status    = $this->input->get('status') ?: 'all';
+    $constName = $this->input->get('constituency') ?: 'all';
+    
+    // Get all constituencies with aggregated data (including zero)
+    $allData = $this->VoterTurnout_model->getAllConstituenciesWithVoterData($startDate, $endDate, $status, $zone);
+    
+    // Filter by specific constituency if selected
+    if($constName != 'all') {
+        $allData = array_filter($allData, fn($item) => $item->naannoofil_id == $constName);
+        $allData = array_values($allData);
+    }
+    
+    // Show only constituencies that have at least one report (total_voters > 0)
+    $constituencyData = array_filter($allData, fn($item) => $item->total_voters > 0);
+    $constituencyData = array_values($constituencyData);
+    
+    // Overall stats from voter_turnout table
+    $stats = $this->VoterTurnout_model->getDashboardStats($startDate, $endDate);
+    
+    // All zones for filter
+    $allZones = $this->VoterTurnout_model->getAllZones();
+    
+    // Distinct naannoofil_id from voter_turnout table (for dropdown)
+    $constituencyOptions = $this->db->distinct()->select('naannoofil_id')
+        ->where('naannoofil_id IS NOT NULL')->where('naannoofil_id !=', '')
+        ->order_by('naannoofil_id')->get('voter_turnout')->result();
+    
+    // Status counts for displayed data
+    $greenCount = count(array_filter($constituencyData, fn($c) => $c->current_status == 'green'));
+    $yellowCount = count(array_filter($constituencyData, fn($c) => $c->current_status == 'yellow'));
+    $redCount = count(array_filter($constituencyData, fn($c) => $c->current_status == 'red'));
+    
+    $data = [
+        'pageTitle' => 'Daashboordii Baayyina Filattoota - Admin',
+        'name' => $this->session->userdata('full_name'),
+        'role' => $this->session->userdata('role'),
+        'role_text' => $this->getRoleText($this->session->userdata('role')),
+        'profile_image' => $this->session->userdata('profile_image'),
+        'last_login' => $this->session->userdata('last_login'),
+        'constituency_data' => $constituencyData,
+        'stats' => $stats,
+        'all_zones' => $allZones,
+        'constituency_options' => $constituencyOptions,
+        'green_count' => $greenCount,
+        'yellow_count' => $yellowCount,
+        'red_count' => $redCount,
+        'total_constituencies_with_data' => count($constituencyData),
+        'start_date' => $startDate,
+        'end_date' => $endDate,
+        'selected_zone' => $zone,
+        'selected_status' => $status,
+        'selected_constituency' => $constName,
+        'activeMenu' => 'voterTurnoutAdminDashboard'
+    ];
+    
+    $this->load->view('layout/header');
+    $this->load->view('layout/topmenu');
+    $this->load->view('layout/sidemenu', $data);
+    $this->load->view('voter_turnout/voter_turnout_admin_dashboard', $data);
+    $this->load->view('layout/footer');
+}
+    
     /**
-     * Admin List Reports - All regions (Complete list for admin)
+     * Admin List Reports - All regions
      */
     public function adminListReports() {
         if($this->session->userdata('username')) {
             
-            // Check if user is admin
             if($this->session->userdata('role') != 1) {
                 $this->session->set_flashdata('error', 'Gabaasa kana ilaaluuf admin qofa!');
                 redirect('dashboard');
@@ -523,19 +553,13 @@ class VoterTurnout extends CI_Controller {
             
             $userName = $this->session->userdata('full_name');
             
-            // Get filter parameters
             $startDate = $this->input->get('start_date') ?: date('Y-m-d', strtotime('-30 days'));
             $endDate = $this->input->get('end_date') ?: date('Y-m-d');
             $statusLevel = $this->input->get('status_level') ?: 'all';
             $selectedRegion = $this->input->get('region') ?: 'all';
             
-            // Get all reports with filters
             $reports = $this->VoterTurnout_model->getAllReports($startDate, $endDate, $statusLevel, $selectedRegion);
-            
-            // Get summary statistics
             $stats = $this->VoterTurnout_model->getDashboardStats($startDate, $endDate);
-            
-            // Get all regions for filter dropdown
             $allRegions = $this->VoterTurnout_model->getAllRegions();
             
             $data = array(
@@ -565,43 +589,102 @@ class VoterTurnout extends CI_Controller {
         }
     }
 
-     public function dashboard() {
-        if($this->session->userdata('username')) {
-            
-            $userName = $this->session->userdata('full_name');
-            $votingRegionCode = $this->session->userdata('naannoofil') ?: '';
-            $votingRegionName = $votingRegionCode;
-            
-            $currentMonth = date('Y-m');
-            
-            // Get summary statistics
-            $summary = $this->ElectionReport_model->VoterTurnout_model($votingRegionCode, $currentMonth);
-            
-                        
-            $data = array(
-                'pageTitle' => 'Daashboordii Filannoo Paartii',
-                'name' => $userName,
-                'role' => $this->session->userdata('role'),
-                'role_text' => $this->getRoleText($this->session->userdata('role')),
-                'profile_image' => $this->session->userdata('profile_image'),
-                'last_login' => $this->session->userdata('last_login'),
-                'voting_region_code' => $votingRegionCode,
-                'voting_region_name' => $votingRegionName,
-                'summary' => $summary,
-                'party_breakdown' => $partyBreakdown,
-                'week_labels' => json_encode($weekData['labels']),
-                'week_data' => json_encode($weekData['data']),
-                'activeMenu' => 'electionDashboard'
-            );
-            
-            $this->load->view('layout/header');
-            $this->load->view('layout/topmenu');
-            $this->load->view('layout/sidemenu', $data);
-            $this->load->view('voter_turnout/nfdashboard', $data);
-            $this->load->view('layout/footer');
-        } else {
-            redirect('Structure/login');
-        }
+/**
+ * Admin view for single constituency details with all reports
+ */
+public function adminConstituencyDetail($constituency_name) {
+    if($this->session->userdata('username') && $this->session->userdata('role') == 1) {
+        
+        $constituency_name = urldecode($constituency_name);
+        
+        // Get date filters from URL
+        $startDate = $this->input->get('start_date') ?: date('Y-m-d', strtotime('-30 days'));
+        $endDate = $this->input->get('end_date') ?: date('Y-m-d');
+        
+        // Get ALL reports for this constituency
+        $this->db->select('*');
+        $this->db->from('voter_turnout');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $this->db->order_by('report_date', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
+        $allReports = $this->db->get()->result();
+        
+        // Get filtered reports by date
+        $this->db->select('*');
+        $this->db->from('voter_turnout');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $this->db->where('report_date >=', $startDate);
+        $this->db->where('report_date <=', $endDate);
+        $this->db->order_by('report_date', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
+        $filteredReports = $this->db->get()->result();
+        
+        // Get summary stats for filtered period
+        $this->db->select_sum('male_voters');
+        $this->db->select_sum('female_voters');
+        $this->db->select_sum('total_voters');
+        $this->db->select('COUNT(*) as total_reports');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $this->db->where('report_date >=', $startDate);
+        $this->db->where('report_date <=', $endDate);
+        $summary = $this->db->get('voter_turnout')->row();
+        
+        // Get complete summary (all time)
+        $this->db->select_sum('male_voters');
+        $this->db->select_sum('female_voters');
+        $this->db->select_sum('total_voters');
+        $this->db->select('COUNT(*) as total_reports');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $allTimeSummary = $this->db->get('voter_turnout')->row();
+        
+        // Get latest status (most recent report) - SAFE with null check
+        $this->db->select('status_level, status_reason, report_date, created_at');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $this->db->order_by('report_date', 'DESC');
+        $this->db->order_by('created_at', 'DESC');
+        $this->db->limit(1);
+        $latestResult = $this->db->get('voter_turnout')->row();
+        
+        // Create safe latest object with defaults
+        $latest = new stdClass();
+        $latest->status_level = $latestResult->status_level ?? 'green';
+        $latest->status_reason = $latestResult->status_reason ?? '';
+        $latest->report_date = $latestResult->report_date ?? null;
+        $latest->created_at = $latestResult->created_at ?? null;
+        
+        // Get gender breakdown
+        $this->db->select_sum('male_voters');
+        $this->db->select_sum('female_voters');
+        $this->db->where('naannoofil_id', $constituency_name);
+        $genderStats = $this->db->get('voter_turnout')->row();
+        
+        $data = array(
+            'pageTitle' => 'Naannoo Filannoo Detail - ' . $constituency_name,
+            'name' => $this->session->userdata('full_name'),
+            'role' => $this->session->userdata('role'),
+            'role_text' => $this->getRoleText($this->session->userdata('role')),
+            'profile_image' => $this->session->userdata('profile_image'),
+            'last_login' => $this->session->userdata('last_login'),
+            'constituency_name' => $constituency_name,
+            'reports' => $filteredReports,
+            'all_reports' => $allReports,
+            'summary' => $summary,
+            'all_time_summary' => $allTimeSummary,
+            'latest_status' => $latest,
+            'gender_stats' => $genderStats,
+            'start_date' => $startDate,
+            'end_date' => $endDate,
+            'activeMenu' => 'voterTurnoutAdminList'
+        );
+        
+        $this->load->view('layout/header');
+        $this->load->view('layout/topmenu');
+        $this->load->view('layout/sidemenu', $data);
+        $this->load->view('voter_turnout/voter_turnout_admin_constituency_detail', $data);
+        $this->load->view('layout/footer');
+    } else {
+        redirect('Structure/login');
     }
+}
 }
 ?>

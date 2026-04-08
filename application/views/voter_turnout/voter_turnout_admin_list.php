@@ -178,12 +178,58 @@
             align-items: center;
             gap: 6px;
             cursor: pointer;
+            text-decoration: none;
         }
 
         .btn-primary { background: var(--primary-green); color: white; }
         .btn-primary:hover { background: var(--primary-dark); }
         .btn-teal { background: var(--teal); color: white; }
         .btn-teal:hover { background: #146b78; }
+        .btn-sm { padding: 5px 10px; font-size: 11px; border-radius: 6px; }
+
+        .form-control {
+            padding: 8px 12px;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            width: 100%;
+        }
+
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .col-md-3 { flex: 1; min-width: 180px; }
+        .col-md-12 { width: 100%; }
+        .col-xs-6 { flex: 1; min-width: 150px; }
+        .text-center { text-align: center; }
+        .text-right { text-align: right; }
+
+        .pagination {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        .pagination button {
+            padding: 8px 14px;
+            border: 1px solid var(--border);
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+        .pagination button.active {
+            background: var(--primary-green);
+            color: white;
+            border-color: var(--primary-green);
+        }
+        .pagination button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
 
         @keyframes slideUp {
             from { opacity: 0; transform: translateY(20px); }
@@ -191,6 +237,21 @@
         }
 
         .animate-slide { animation: slideUp 0.4s ease forwards; }
+        
+        .filter-row {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: flex-end;
+        }
+        .filter-item {
+            flex: 1;
+            min-width: 160px;
+        }
+        .filter-actions {
+            flex: 0.5;
+            min-width: 140px;
+        }
     </style>
 
     <!-- Dashboard Header -->
@@ -211,30 +272,30 @@
 
     <section class="content" style="padding: 0 15px 15px 15px;">
         
-        <!-- Filter Card -->
+        <!-- Filter Card - All filters in one row -->
         <div class="filter-card animate-slide" style="animation-delay: 0.05s;">
-            <form method="get" action="<?php echo base_url('VoterTurnout/adminListReports'); ?>">
-                <div class="row">
-                    <div class="col-md-3">
+            <form method="get" action="<?php echo base_url('VoterTurnout/adminListReports'); ?>" id="filterForm">
+                <div class="filter-row">
+                    <div class="filter-item">
                         <label style="font-weight: 600; font-size: 12px;">Guyyaa Jalqabaa:</label>
-                        <input type="date" name="start_date" class="form-control" value="<?php echo $start_date; ?>" style="border-radius: 8px;">
+                        <input type="date" name="start_date" class="form-control" value="<?php echo $start_date; ?>">
                     </div>
-                    <div class="col-md-3">
+                    <div class="filter-item">
                         <label style="font-weight: 600; font-size: 12px;">Guyyaa Xumuraa:</label>
-                        <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>" style="border-radius: 8px;">
+                        <input type="date" name="end_date" class="form-control" value="<?php echo $end_date; ?>">
                     </div>
-                    <div class="col-md-3">
+                    <div class="filter-item">
                         <label style="font-weight: 600; font-size: 12px;">Haala Naannoo:</label>
-                        <select name="status_level" class="form-control" style="border-radius: 8px;">
+                        <select name="status_level" class="form-control">
                             <option value="all" <?php echo $selected_status == 'all' ? 'selected' : ''; ?>>Hunda</option>
                             <option value="green" <?php echo $selected_status == 'green' ? 'selected' : ''; ?>>Green (Nagaa)</option>
                             <option value="yellow" <?php echo $selected_status == 'yellow' ? 'selected' : ''; ?>>Yellow (Rakkina xixiqqoo)</option>
                             <option value="red" <?php echo $selected_status == 'red' ? 'selected' : ''; ?>>Red (Rakkina guddaa)</option>
                         </select>
                     </div>
-                    <div class="col-md-3">
-                        <label style="font-weight: 600; font-size: 12px;">Naannoo:</label>
-                        <select name="region" class="form-control" style="border-radius: 8px;">
+                    <div class="filter-item">
+                        <label style="font-weight: 600; font-size: 12px;">Naannoo Filannoo:</label>
+                        <select name="region" class="form-control">
                             <option value="all" <?php echo $selected_region == 'all' ? 'selected' : ''; ?>>Naannoo Hunda</option>
                             <?php foreach($all_regions as $region): ?>
                                 <option value="<?php echo $region->naannoofil_id; ?>" <?php echo $selected_region == $region->naannoofil_id ? 'selected' : ''; ?>>
@@ -243,11 +304,12 @@
                             <?php endforeach; ?>
                         </select>
                     </div>
-                </div>
-                <div class="row" style="margin-top: 15px;">
-                    <div class="col-md-12 text-right">
-                        <button type="submit" class="btn-modern btn-primary"><i class="fa fa-search"></i> Calleessii</button>
-                        <a href="<?php echo base_url('VoterTurnout/adminListReports'); ?>" class="btn-modern btn-teal"><i class="fa fa-refresh"></i> Haari</a>
+                    <div class="filter-actions">
+                        <label style="font-weight: 600; font-size: 12px;">&nbsp;</label>
+                        <div>
+                            <button type="submit" class="btn-modern btn-primary"><i class="fa fa-search"></i> Calleessii</button>
+                            <a href="<?php echo base_url('VoterTurnout/adminListReports'); ?>" class="btn-modern btn-teal"><i class="fa fa-refresh"></i> Haari</a>
+                        </div>
                     </div>
                 </div>
             </form>
@@ -255,37 +317,31 @@
 
         <!-- Summary Stats Cards -->
         <div class="row animate-slide" style="animation-delay: 0.1s;">
-            <div class="col-xs-6 col-sm-6 col-md-3">
+            <div class="col-md-3">
                 <div class="stat-card primary">
                     <div class="stat-icon"><i class="fa fa-file-text-o"></i></div>
-                    <div class="stat-value"><?php echo number_format(count($reports)); ?></div>
+                    <div class="stat-value" id="totalReportsCount"><?php echo number_format(count($reports)); ?></div>
                     <p class="stat-label">Gabaasa Arganne</p>
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-3">
+            <div class="col-md-3">
                 <div class="stat-card teal">
                     <div class="stat-icon"><i class="fa fa-users"></i></div>
-                    <div class="stat-value"><?php echo number_format($stats['overall']->total_voters ?? 0); ?></div>
+                    <div class="stat-value" id="totalVotersCount"><?php echo number_format($stats->total_voters ?? 0); ?></div>
                     <p class="stat-label">Waliigala Filattoota</p>
                 </div>
             </div>
-            <div class="col-xs-6 col-sm-6 col-md-3">
-                <div class="stat-card gold">
-                    <div class="stat-icon"><i class="fa fa-calendar"></i></div>
-                    <div class="stat-value"><?php echo date('d/m/Y', strtotime($start_date)); ?> - <?php echo date('d/m/Y', strtotime($end_date)); ?></div>
-                    <p class="stat-label">Yeroo Calleessaa</p>
-                </div>
-            </div>
-            <div class="col-xs-6 col-sm-6 col-md-3">
+           
+            <div class="col-md-3">
                 <div class="stat-card red">
                     <div class="stat-icon"><i class="fa fa-map-marker"></i></div>
-                    <div class="stat-value"><?php echo number_format($stats['total_regions'] ?? 0); ?></div>
+                    <div class="stat-value" id="totalRegionsCount"><?php echo number_format(count($all_regions)); ?></div>
                     <p class="stat-label">Naannoo Hunda</p>
                 </div>
             </div>
         </div>
 
-        <!-- Reports Table -->
+        <!-- Reports Table with Pagination -->
         <div class="modern-card animate-slide" style="animation-delay: 0.15s;">
             <div class="card-header">
                 <h3><i class="fa fa-list"></i> Gabaasawwan Galmaa'an</h3>
@@ -299,89 +355,44 @@
                     <div style="text-align: center; padding: 60px 20px;">
                         <i class="fa fa-inbox" style="font-size: 64px; color: #cbd5e0;"></i>
                         <p style="margin-top: 15px; color: #718096;">Gabaasi baayyina filattoota hin jiru!</p>
-                        <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn-modern btn-primary" style="margin-top: 10px;">
-                            <i class="fa fa-plus-circle"></i> Haaraa Galmeessi
-                        </a>
+                      
                     </div>
                 <?php else: ?>
-                    <table class="table-modern" id="reportsTable">
-                        <thead>
-                            <tr>
-                                <th style="width: 3%; text-align: center;">#</th>
-                                <th style="width: 10%;">Naannoo</th>
-                                <th style="width: 10%;">Guyyaa</th>
-                                <th style="width: 8%; text-align: center;">Yeroo</th>
-                                <th style="width: 8%; text-align: center;">Lakk.Tarree</th>
-                                <th style="width: 8%; text-align: center;">Dhiirii</th>
-                                <th style="width: 8%; text-align: center;">Dubartii</th>
-                                <th style="width: 8%; text-align: center;">Waliigala</th>
-                                <th style="width: 10%; text-align: center;">Haala Naannoo</th>
-                                <th style="width: 12%;">Gabaasaa</th>
-                                <th style="width: 8%; text-align: center;">Gocha</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <?php 
-                            $i = 1; 
-                            foreach($reports as $report): 
-                                $statusClass = '';
-                                $statusIcon = '';
-                                $statusText = '';
-                                if($report->status_level == 'green') {
-                                    $statusClass = 'badge-green';
-                                    $statusIcon = 'fa-check-circle';
-                                    $statusText = 'Green';
-                                } elseif($report->status_level == 'yellow') {
-                                    $statusClass = 'badge-yellow';
-                                    $statusIcon = 'fa-warning';
-                                    $statusText = 'Yellow';
-                                } else {
-                                    $statusClass = 'badge-red';
-                                    $statusIcon = 'fa-exclamation-triangle';
-                                    $statusText = 'Red';
-                                }
-                            ?>
-                            <tr>
-                                <td class="text-center"><?php echo $i++; ?></td>
-                                <td><strong><?php echo $report->naannoofil_id; ?></strong></td>
-                                <td><?php echo date('d/m/Y', strtotime($report->report_date)); ?></td>
-                                <td class="text-center"><?php echo date('H:i', strtotime($report->report_time)); ?> <small>(<?php echo $report->report_session; ?>)</small></td>
-                                <td class="text-center">#<?php echo str_pad($report->serial_number, 4, '0', STR_PAD_LEFT); ?></td>
-                                <td class="text-center"><strong style="color: #2c5f2d;"><?php echo number_format($report->male_voters); ?></strong></td>
-                                <td class="text-center"><strong style="color: #e6a017;"><?php echo number_format($report->female_voters); ?></strong></td>
-                                <td class="text-center"><span class="badge-modern"><?php echo number_format($report->total_voters); ?></span></td>
-                                <td class="text-center">
-                                    <span class="<?php echo $statusClass; ?>">
-                                        <i class="fa <?php echo $statusIcon; ?>"></i> <?php echo $statusText; ?>
-                                    </span>
-                                    <?php if($report->status_reason): ?>
-                                        <br><small style="color: #999;" title="<?php echo htmlspecialchars($report->status_reason); ?>">
-                                            <?php echo substr($report->status_reason, 0, 30); ?>...
-                                        </small>
-                                    <?php endif; ?>
-                                </td>
-                                <td><small><?php echo $report->reporter_name; ?></small></td>
-                                <td class="text-center">
-                                    <div style="display: flex; gap: 5px; justify-content: center;">
-                                        <a href="<?php echo base_url('VoterTurnout/viewReport/'.$report->id); ?>" class="btn btn-sm" style="background: #17a2b8; color: white; border-radius: 6px; padding: 5px 10px;" title="Ilaalchuu">
-                                            <i class="fa fa-eye"></i>
-                                        </a>
-                                    </div>
-                                </td>
-                            </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                        <tfoot>
-                            <tr style="background: #f8f9fc; font-weight: 700;">
-                                <td colspan="5" class="text-right"><strong>WALIIGALA:</strong></td>
-                                <td class="text-center"><strong><?php echo number_format(array_sum(array_column($reports, 'male_voters'))); ?></strong></td>
-                                <td class="text-center"><strong><?php echo number_format(array_sum(array_column($reports, 'female_voters'))); ?></strong></td>
-                                <td class="text-center"><strong><?php echo number_format(array_sum(array_column($reports, 'total_voters'))); ?></strong></td>
-                                <td colspan="3"></td>
-                            </tr>
-                        </tfoot>
-                    </table>
+                    <div class="table-responsive">
+                        <table class="table-modern" id="reportsTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 3%; text-align: center;">#</th>
+                                    <th style="width: 12%;">Naannoo Filannoo</th>
+                                    <th style="width: 10%;">Guyyaa</th>
+                                    <th style="width: 8%; text-align: center;">Yeroo</th>
+                                    <th style="width: 8%; text-align: center;">Lakk.Tarree</th>
+                                    <th style="width: 8%; text-align: center;">Dhiirii</th>
+                                    <th style="width: 8%; text-align: center;">Dubartii</th>
+                                    <th style="width: 8%; text-align: center;">Waliigala</th>
+                                    <th style="width: 10%; text-align: center;">Haala Naannoo</th>
+                                    <th style="width: 10%;">Gabaasaa</th>
+                                    <th style="width: 10%; text-align: center;">Gocha</th>
+                                </tr>
+                            </thead>
+                            <tbody id="tableBody"></tbody>
+                            <tfoot id="tableFoot"></tfoot>
+                        </table>
+                    </div>
+                    <div id="paginationControls" class="pagination"></div>
                 <?php endif; ?>
+            </div>
+        </div>
+        
+        <!-- Action Buttons -->
+        <div class="row animate-slide" style="animation-delay: 0.2s; margin-bottom: 30px;">
+            <div class="col-md-12 text-right">
+                <a href="<?php echo base_url('VoterTurnout/register'); ?>" class="btn-modern btn-primary">
+                    <i class="fa fa-plus-circle"></i> Haaraa Galmeessi
+                </a>
+                <a href="<?php echo base_url('VoterTurnout/adminDashboard'); ?>" class="btn-modern btn-teal" style="margin-left: 10px;">
+                    <i class="fa fa-dashboard"></i> Daashboordiitti Deebi'i
+                </a>
             </div>
         </div>
         
@@ -389,37 +400,159 @@
 </div>
 
 <script>
-    function exportToCSV() {
-        var rows = [];
-        // Add headers
-        rows.push(['#', 'Naannoo', 'Guyyaa', 'Yeroo', 'Lakk.Tarree', 'Dhiirii', 'Dubartii', 'Waliigala', 'Haala Naannoo', 'Sababa', 'Gabaasaa', 'Hubannoo']);
-        
-        <?php foreach($reports as $report): ?>
-            rows.push([
-                <?php echo $i; ?>,
-                '<?php echo addslashes($report->naannoofil_id); ?>',
-                '<?php echo date('Y-m-d', strtotime($report->report_date)); ?>',
-                '<?php echo $report->report_time . ' (' . $report->report_session . ')'; ?>',
-                '#<?php echo str_pad($report->serial_number, 4, '0', STR_PAD_LEFT); ?>',
-                <?php echo $report->male_voters; ?>,
-                <?php echo $report->female_voters; ?>,
-                <?php echo $report->total_voters; ?>,
-                '<?php echo strtoupper($report->status_level); ?>',
-                '<?php echo addslashes($report->status_reason); ?>',
-                '<?php echo addslashes($report->reporter_name); ?>',
-                '<?php echo addslashes($report->remarks); ?>'
-            ]);
-        <?php endforeach; ?>
-        
-        var csvContent = rows.map(row => row.join(',')).join('\n');
-        var blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
-        var link = document.createElement('a');
-        var url = URL.createObjectURL(blob);
-        link.href = url;
-        link.setAttribute('download', 'gabaasawwan_baayyina_filattoota_' + new Date().toISOString().slice(0,19) + '.csv');
-        document.body.appendChild(link);
-        link.click();
-        document.body.removeChild(link);
-        URL.revokeObjectURL(url);
+// Pass PHP data to JavaScript
+const reportsData = <?php echo json_encode($reports); ?>;
+let currentPage = 1;
+const rowsPerPage = 15;
+
+function getStatusBadge(status, reason) {
+    let badgeClass = '', icon = '', text = '';
+    if(status == 'green') {
+        badgeClass = 'badge-green';
+        icon = 'fa-check-circle';
+        text = 'GREEN';
+    } else if(status == 'yellow') {
+        badgeClass = 'badge-yellow';
+        icon = 'fa-warning';
+        text = 'YELLOW';
+    } else {
+        badgeClass = 'badge-red';
+        icon = 'fa-exclamation-triangle';
+        text = 'RED';
     }
+    let html = `<span class="${badgeClass}"><i class="fa ${icon}"></i> ${text}</span>`;
+    if(reason) {
+        html += `<br><small style="color: #999;" title="${escapeHtml(reason)}">${reason.substring(0, 30)}${reason.length > 30 ? '...' : ''}</small>`;
+    }
+    return html;
+}
+
+function escapeHtml(str) {
+    if(!str) return '';
+    return str.replace(/[&<>]/g, function(m) {
+        if(m === '&') return '&amp;';
+        if(m === '<') return '&lt;';
+        if(m === '>') return '&gt;';
+        return m;
+    });
+}
+
+function renderTable() {
+    const start = (currentPage - 1) * rowsPerPage;
+    const end = start + rowsPerPage;
+    const pageData = reportsData.slice(start, end);
+    const tbody = document.getElementById('tableBody');
+    tbody.innerHTML = '';
+    
+    if(!pageData.length) {
+        tbody.innerHTML = '<tr><td colspan="11" class="text-center" style="padding:40px;">No data found</td></tr>';
+        return;
+    }
+    
+    pageData.forEach((report, idx) => {
+        const rowNum = start + idx + 1;
+        // FIXED: Correct URL for constituency detail
+        const detailUrl = "<?php echo base_url('VoterTurnout/adminConstituencyDetail/'); ?>" + encodeURIComponent(report.naannoofil_id);
+        // FIXED: Correct URL for view single report
+        const viewUrl = "<?php echo base_url('VoterTurnout/viewReport/'); ?>" + report.id;
+        
+        tbody.innerHTML += `<tr>
+            <td class="text-center">${rowNum}</td>
+            <td><strong><a href="${detailUrl}" style="color: #2c5f2d; text-decoration: none;">${escapeHtml(report.naannoofil_id)}</a></strong></td>
+            <td>${report.report_date ? new Date(report.report_date).toLocaleDateString('en-GB') : 'N/A'}</td>
+            <td class="text-center">${report.report_time ? report.report_time.substring(0,5) : 'N/A'} <small>(${report.report_session || 'N/A'})</small></td>
+            <td class="text-center">#${String(report.serial_number || 0).padStart(4, '0')}</td>
+            <td class="text-center"><strong style="color: #2c5f2d;">${(report.male_voters || 0).toLocaleString()}</strong></td>
+            <td class="text-center"><strong style="color: #e6a017;">${(report.female_voters || 0).toLocaleString()}</strong></td>
+            <td class="text-center"><span class="badge-modern">${(report.total_voters || 0).toLocaleString()}</span></td>
+            <td class="text-center">${getStatusBadge(report.status_level, report.status_reason)}</td>
+            <td><small>${escapeHtml(report.reporter_name || 'Unknown')}</small></td>
+            <td class="text-center">
+                <div style="display: flex; gap: 5px; justify-content: center;">
+                    <a href="${viewUrl}" class="btn-sm" style="background: #17a2b8; color: white; border-radius: 6px; padding: 5px 10px; text-decoration: none;" title="Ilaalchuu">
+                        <i class="fa fa-eye"></i> Ilaali
+                    </a>
+                    <a href="${detailUrl}" class="btn-sm" style="background: #2c5f2d; color: white; border-radius: 6px; padding: 5px 10px; text-decoration: none;" title="Naannoo Detail">
+                        <i class="fa fa-map-marker"></i> Detail
+                    </a>
+                </div>
+            </td>
+        </tr>`;
+    });
+    
+    // Update footer totals
+    const totalMale = reportsData.reduce((sum, r) => sum + (r.male_voters || 0), 0);
+    const totalFemale = reportsData.reduce((sum, r) => sum + (r.female_voters || 0), 0);
+    const totalVoters = reportsData.reduce((sum, r) => sum + (r.total_voters || 0), 0);
+    
+    document.getElementById('tableFoot').innerHTML = `<tr style="background: #f8f9fc; font-weight: 700;">
+        <td colspan="5" class="text-right"><strong>WALIIGALA:</strong></td>
+        <td class="text-center"><strong>${totalMale.toLocaleString()}</strong></td>
+        <td class="text-center"><strong>${totalFemale.toLocaleString()}</strong></td>
+        <td class="text-center"><strong>${totalVoters.toLocaleString()}</strong></td>
+        <td colspan="3"></td>
+    </tr>`;
+    
+    renderPagination();
+}
+
+function renderPagination() {
+    const totalPages = Math.ceil(reportsData.length / rowsPerPage);
+    const container = document.getElementById('paginationControls');
+    if(totalPages <= 1) { container.innerHTML = ''; return; }
+    
+    let html = `<button onclick="changePage(1)" ${currentPage === 1 ? 'disabled' : ''}>«</button>`;
+    for(let i = 1; i <= totalPages; i++) {
+        if(i === 1 || i === totalPages || (i >= currentPage - 2 && i <= currentPage + 2)) {
+            html += `<button class="${i === currentPage ? 'active' : ''}" onclick="changePage(${i})">${i}</button>`;
+        } else if(i === currentPage - 3 || i === currentPage + 3) {
+            html += `<span style="padding:8px;">...</span>`;
+        }
+    }
+    html += `<button onclick="changePage(${totalPages})" ${currentPage === totalPages ? 'disabled' : ''}>»</button>`;
+    container.innerHTML = html;
+}
+
+function changePage(page) {
+    currentPage = page;
+    renderTable();
+}
+
+function exportToCSV() {
+    var rows = [];
+    rows.push(['#', 'Naannoo Filannoo', 'Guyyaa', 'Yeroo', 'Lakk.Tarree', 'Dhiirii', 'Dubartii', 'Waliigala', 'Haala Naannoo', 'Sababa', 'Gabaasaa', 'Hubannoo']);
+    
+    reportsData.forEach((report, index) => {
+        rows.push([
+            index + 1,
+            report.naannoofil_id || '',
+            report.report_date || '',
+            (report.report_time || '') + ' (' + (report.report_session || '') + ')',
+            '#' + String(report.serial_number || 0).padStart(4, '0'),
+            report.male_voters || 0,
+            report.female_voters || 0,
+            report.total_voters || 0,
+            (report.status_level || '').toUpperCase(),
+            (report.status_reason || '').replace(/,/g, ';'),
+            report.reporter_name || '',
+            (report.remarks || '').replace(/,/g, ';')
+        ]);
+    });
+    
+    var csvContent = rows.map(row => row.join(',')).join('\n');
+    var blob = new Blob(["\uFEFF" + csvContent], { type: 'text/csv;charset=utf-8;' });
+    var link = document.createElement('a');
+    var url = URL.createObjectURL(blob);
+    link.href = url;
+    link.setAttribute('download', 'gabaasawwan_baayyina_filattoota_' + new Date().toISOString().slice(0,19) + '.csv');
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+}
+
+// Initialize table
+if(reportsData.length > 0) {
+    renderTable();
+}
 </script>

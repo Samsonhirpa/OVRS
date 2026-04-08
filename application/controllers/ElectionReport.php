@@ -16,7 +16,7 @@ class ElectionReport extends CI_Controller {
     }
     
     /**
-     * Display the registration form
+     * Display the registration form - NO VALIDATION, always opens
      */
     public function register() {
         // Check if user is logged in
@@ -49,12 +49,8 @@ class ElectionReport extends CI_Controller {
             // Get today's date
             $today = date('Y-m-d');
 
-            // Must register elector count before election result
-            $hasElectorCount = $this->ElectorRegistration_model->hasRegionRegistrationOnDate($votingRegionCode, $today);
-            if(!$hasElectorCount) {
-                $this->session->set_flashdata('error', 'Bu\'aa filannoo galmeessuun dura lakkoofsa filattootaa galmeessuu qabdu.');
-                redirect('ElectorRegistration/register');
-            }
+            // VALIDATION REMOVED: No longer checking elector count before opening registration
+            // The registration form will open regardless of whether elector count exists
             
             // Get next serial number
             $serialNumber = $this->ElectionReport_model->getNextSerialNumber($votingRegionCode, $today);
@@ -80,7 +76,7 @@ class ElectionReport extends CI_Controller {
                 'activeMenu' => 'electionRegister'
             );
             
-            // Load layout with view
+            // Load layout with view - ALWAYS OPENS
             $this->load->view('layout/header');
             $this->load->view('layout/topmenu');
             $this->load->view('layout/sidemenu', $data);
@@ -146,12 +142,6 @@ class ElectionReport extends CI_Controller {
         $partyName = $this->input->post('party_name');
         $remarks = $this->input->post('remarks');
 
-        // Validate elector count exists for same date before saving election result
-        if(!$this->ElectorRegistration_model->hasRegionRegistrationOnDate($votingRegionCode, $reportDate)) {
-            $this->session->set_flashdata('error', 'Guyyaa kanaaf lakkoofsa filattootaa jalqaba galmeessaa.');
-            redirect('ElectorRegistration/register');
-        }
-        
         // Get male and female voters (simplified - no member/non-member)
         $maleVoters = (int)($this->input->post('male_voters') ?: 0);
         $femaleVoters = (int)($this->input->post('female_voters') ?: 0);
